@@ -1,5 +1,6 @@
 import { Router, Request, Response } from 'express';
 import { pool } from '../db';
+import { requireFields } from '../validate';
 
 export const businessRouter = Router();
 
@@ -39,4 +40,51 @@ businessRouter.get('/users', async (_req: Request, res: Response) => {
     },
     evolution: evolution.rows.map((r) => ({ label: r.label, value: r.value })),
   });
+});
+
+// ── POST routes ────────────────────────────────────────────────────────────────
+
+// POST /api/business/overview
+businessRouter.post('/overview', async (req: Request, res: Response) => {
+  const b = req.body as Record<string, unknown>;
+  const required = [
+    'revenueTotal', 'revenueCurrency', 'revenuePeriod',
+    'arpuValue', 'arpuCurrency', 'subscriptionPrice',
+    'convVisitors', 'convNewSubs', 'convRate',
+    'churnUsers', 'churnRate', 'retentionRate',
+  ];
+  if (!requireFields(b, required, res)) return;
+
+  const { rows } = await pool.query<{ id: number }>(
+    `INSERT INTO business_overview
+       (revenue_total, revenue_currency, revenue_period,
+        arpu_value, arpu_currency, subscription_price,
+        conv_visitors, conv_new_subs, conv_rate,
+        churn_users, churn_rate, retention_rate)
+     VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12) RETURNING id`,
+    [
+      b.revenueTotal, b.revenueCurrency, b.revenuePeriod,
+      b.arpuValue, b.arpuCurrency, b.subscriptionPrice,
+      b.convVisitors, b.convNewSubs, b.convRate,
+      b.churnUsers, b.churnRate, b.retentionRate,
+    ],
+  );
+  res.status(201).json({ id: rows[0].id });
+});
+
+// POST /api/business/users
+businessRouter.post('/users', async (req: Request, res: Response) => {
+  const b = req.body as Record<string, unknown>;
+  const required = [
+    'total', 'activeMonthly', 'startOfMonth', 'endOfMonth', 'newThisMonth', 'churnedThisMonth',
+  ];
+  if (!requireFields(b, required, res)) return;
+
+  const { rows } = await pool.query<{ id: number }>(
+    `INSERT INTO business_users
+       (total, active_monthly, start_of_month, end_of_month, new_this_month, churned_this_month)
+     VALUES ($1,$2,$3,$4,$5,$6) RETURNING id`,
+    [b.total, b.activeMonthly, b.startOfMonth, b.endOfMonth, b.newThisMonth, b.churnedThisMonth],
+  );
+  res.status(201).json({ id: rows[0].id });
 });

@@ -1,5 +1,6 @@
 import { Router, Request, Response } from 'express';
 import { pool } from '../db';
+import { requireFields } from '../validate';
 
 export const devopsRouter = Router();
 
@@ -24,4 +25,34 @@ devopsRouter.get('/overview', async (_req: Request, res: Response) => {
       productOwner: r.team_product_owner, cto: r.team_cto,
     },
   });
+});
+
+// ── POST routes ────────────────────────────────────────────────────────────────
+
+// POST /api/devops/overview
+devopsRouter.post('/overview', async (req: Request, res: Response) => {
+  const b = req.body as Record<string, unknown>;
+  const required = [
+    'deployTotal', 'deploySuccessful', 'deployFailed',
+    'changeFailureRate', 'frequencyPerDay', 'periodDays',
+    'leadTimeAvgDays',
+    'teamDevelopers', 'teamDevops', 'teamProductOwner', 'teamCto',
+  ];
+  if (!requireFields(b, required, res)) return;
+
+  const { rows } = await pool.query<{ id: number }>(
+    `INSERT INTO devops_overview
+       (deploy_total, deploy_successful, deploy_failed,
+        change_failure_rate, frequency_per_day, period_days,
+        lead_time_avg_days,
+        team_developers, team_devops, team_product_owner, team_cto)
+     VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11) RETURNING id`,
+    [
+      b.deployTotal, b.deploySuccessful, b.deployFailed,
+      b.changeFailureRate, b.frequencyPerDay, b.periodDays,
+      b.leadTimeAvgDays,
+      b.teamDevelopers, b.teamDevops, b.teamProductOwner, b.teamCto,
+    ],
+  );
+  res.status(201).json({ id: rows[0].id });
 });

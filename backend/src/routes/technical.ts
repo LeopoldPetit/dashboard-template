@@ -1,5 +1,6 @@
 import { Router, Request, Response } from 'express';
 import { pool } from '../db';
+import { requireFields } from '../validate';
 
 export const technicalRouter = Router();
 
@@ -69,4 +70,71 @@ technicalRouter.get('/response-times', async (_req: Request, res: Response) => {
     samples: samples.rows.map((r) => ({ index: r.sample_index, ms: r.ms })),
     stats: { min: s.min_ms, max: s.max_ms, average: s.average_ms, p50: s.p50_ms, p90: s.p90_ms, p95: s.p95_ms, unit: 'ms' },
   });
+});
+
+// ── POST routes ────────────────────────────────────────────────────────────────
+
+// POST /api/technical/overview
+technicalRouter.post('/overview', async (req: Request, res: Response) => {
+  const b = req.body as Record<string, unknown>;
+  const required = [
+    'totalRequests', 'errorRequests', 'errorRate',
+    'uptimeTotalHours', 'uptimeDowntimeHours', 'uptimePercent',
+    'mttrAvgHours', 'rtAverageMs', 'rtP95Ms',
+  ];
+  if (!requireFields(b, required, res)) return;
+
+  const { rows } = await pool.query<{ id: number }>(
+    `INSERT INTO technical_overview
+       (total_requests, error_requests, error_rate,
+        uptime_total_hours, uptime_downtime_h, uptime_percent,
+        mttr_avg_hours, rt_average_ms, rt_p95_ms)
+     VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING id`,
+    [
+      b.totalRequests, b.errorRequests, b.errorRate,
+      b.uptimeTotalHours, b.uptimeDowntimeHours, b.uptimePercent,
+      b.mttrAvgHours, b.rtAverageMs, b.rtP95Ms,
+    ],
+  );
+  res.status(201).json({ id: rows[0].id });
+});
+
+// POST /api/technical/incidents
+technicalRouter.post('/incidents', async (req: Request, res: Response) => {
+  const b = req.body as Record<string, unknown>;
+  const required = ['title', 'durationHours', 'durationMinutes', 'severity', 'status'];
+  if (!requireFields(b, required, res)) return;
+
+  const { rows } = await pool.query<{ id: number }>(
+    `INSERT INTO technical_incidents (title, duration_hours, duration_minutes, severity, status)
+     VALUES ($1,$2,$3,$4,$5) RETURNING id`,
+    [b.title, b.durationHours, b.durationMinutes, b.severity, b.status],
+  );
+  res.status(201).json({ id: rows[0].id });
+});
+
+// POST /api/technical/response-times
+technicalRouter.post('/response-times', async (req: Request, res: Response) => {
+  const b = req.body as Record<string, unknown>;
+  if (!requireFields(b, ['samples', 'stats'], res)) return;
+
+  const samples = b.samples as Array<{ index: number; ms: number }>;
+  const stats = b.stats as {
+    min: number; max: number; average: number;
+    p50: number; p90: number; p95: number;
+  };
+
+  await pool.query(
+    `INSERT INTO technical_response_time_stats (min_ms, max_ms, average_ms, p50_ms, p90_ms, p95_ms)
+     VALUES ($1,$2,$3,$4,$5,$6)`,
+    [stats.min, stats.max, stats.average, stats.p50, stats.p90, stats.p95],
+  );
+
+  for (const s of samples) {
+    await pool.query(
+      'INSERT INTO technical_response_time_samples (sample_index, ms) VALUES ($1,$2)',
+      [s.index, s.ms],
+    );
+  }
+  res.status(201).json({ inserted: samples.length });
 });
