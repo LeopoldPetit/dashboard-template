@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
-import { fetchDashboardOverview } from '@/services/api/dashboard';
-import type { IDashboardOverview } from '@/types';
+import { useState, useEffect } from "react";
+import { fetchDashboardOverview } from "@/services/api/dashboard";
+import type { IDashboardOverview } from "@/types";
 
 /**
  * Fetches the full dashboard overview (KPIs, charts, activity).
@@ -14,7 +14,9 @@ export function useDashboardOverview() {
   useEffect(() => {
     fetchDashboardOverview()
       .then(setData)
-      .catch((err: unknown) => setError(err instanceof Error ? err : new Error(String(err))))
+      .catch((err: unknown) =>
+        setError(err instanceof Error ? err : new Error(String(err))),
+      )
       .finally(() => setLoading(false));
   }, []);
 

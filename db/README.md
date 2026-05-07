@@ -20,21 +20,22 @@ psql -h localhost -p 5432 -U streamflow -d streamflow
 
 ## Structure
 
-| Conteneur          | Rôle                                        |
-|--------------------|---------------------------------------------|
-| `streamflow_db`    | PostgreSQL 16 exposé sur `localhost:5432`   |
-| `streamflow_flyway`| Flyway — applique les migrations au démarrage |
+| Conteneur           | Rôle                                          |
+| ------------------- | --------------------------------------------- |
+| `streamflow_db`     | PostgreSQL 16 exposé sur `localhost:5432`     |
+| `streamflow_flyway` | Flyway — applique les migrations au démarrage |
 
 ## Migrations Flyway (`db/migrations/`)
 
-| Fichier                  | Contenu                               |
-|--------------------------|---------------------------------------|
-| `V1__create_schema.sql`  | Création de toutes les tables         |
-| `V2__seed_data.sql`      | Données initiales issues du WireMock  |
+| Fichier                 | Contenu                              |
+| ----------------------- | ------------------------------------ |
+| `V1__create_schema.sql` | Création de toutes les tables        |
+| `V2__seed_data.sql`     | Données initiales issues du WireMock |
 
 ## Tables
 
 ### Technical
+
 - `technical_overview` — KPIs techniques globaux
 - `technical_incidents` — liste des incidents
 - `technical_incidents_summary` — agrégats incidents
@@ -42,25 +43,30 @@ psql -h localhost -p 5432 -U streamflow -d streamflow
 - `technical_response_time_stats` — statistiques (min, max, avg, p50, p90, p95)
 
 ### Project
+
 - `project_overview` — bugs, features, fix rate
 - `project_sprints` — vélocité par sprint
 - `project_sprints_summary` — agrégats sprints
 
 ### DevOps
+
 - `devops_overview` — déploiements, lead time, équipe
 
 ### Business
+
 - `business_overview` — revenue, ARPU, conversions, churn
 - `business_users` — utilisateurs actifs / churn / nouveaux
 - `business_user_evolution` — évolution début/fin de mois
 
 ### Dashboard
+
 - `dashboard_kpis` — KPIs de la page d'accueil
 - `dashboard_request_volume` — volume de requêtes par créneau horaire
 - `dashboard_weekly_deploys` — déploiements par jour de la semaine
 - `dashboard_recent_activity` — fil d'activité récente
 
 ### Transversal
+
 - `notifications` — notifications utilisateur
 - `kpi_summary` + `kpi_metrics` — récapitulatif global des KPIs
 

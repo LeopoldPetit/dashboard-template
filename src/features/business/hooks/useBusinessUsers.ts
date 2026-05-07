@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
-import { fetchBusinessUsers } from '@/services/api/business';
-import type { IBusinessUsers } from '@/types';
+import { useState, useEffect } from "react";
+import { fetchBusinessUsers } from "@/services/api/business";
+import type { IBusinessUsers } from "@/types";
 
 /**
  * Hook exposant les données utilisateurs business (totaux, actifs, churn, évolution mensuelle).

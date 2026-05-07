@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
-import { fetchBusinessOverview } from '@/services/api/business';
-import type { IBusinessOverview } from '@/types';
+import { useState, useEffect } from "react";
+import { fetchBusinessOverview } from "@/services/api/business";
+import type { IBusinessOverview } from "@/types";
 
 /**
  * Hook exposant les données d'overview business (revenue, ARPU, conversions, churn).

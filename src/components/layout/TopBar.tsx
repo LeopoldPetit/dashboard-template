@@ -1,27 +1,27 @@
-import React, { useState } from 'react';
-import { useLocation } from 'react-router-dom';
-import { Bell, Search, ChevronDown, User } from 'lucide-react';
-import { useNotifications } from '@/hooks/useNotifications';
+import React, { useState } from "react";
+import { useLocation } from "react-router-dom";
+import { Bell, Search, ChevronDown, User } from "lucide-react";
+import { useNotifications } from "@/hooks/useNotifications";
 
 const severityDot: Record<string, string> = {
-  ok: 'bg-emerald-500',
-  critical: 'bg-red-500',
-  info: 'bg-violet-500',
-  warning: 'bg-amber-500',
+  ok: "bg-emerald-500",
+  critical: "bg-red-500",
+  info: "bg-violet-500",
+  warning: "bg-amber-500",
 };
 
 const routeTitles: Record<string, string> = {
-  '/': 'Dashboard',
-  '/technical': 'Technical Overview',
-  '/projects': 'Projects',
-  '/devops': 'DevOps',
-  '/business': 'Business',
-  '/settings': 'Settings',
+  "/": "Dashboard",
+  "/technical": "Technical Overview",
+  "/projects": "Projects",
+  "/devops": "DevOps",
+  "/business": "Business",
+  "/settings": "Settings",
 };
 
 export const TopBar: React.FC = () => {
   const { pathname } = useLocation();
-  const title = routeTitles[pathname] ?? 'StreamFlow';
+  const title = routeTitles[pathname] ?? "StreamFlow";
   const [notifOpen, setNotifOpen] = useState(false);
   const { data: notifData } = useNotifications();
 
@@ -34,11 +34,11 @@ export const TopBar: React.FC = () => {
       <div>
         <h1 className="text-lg font-semibold text-gray-900">{title}</h1>
         <p className="text-xs text-gray-400">
-          {new Date().toLocaleDateString('en-US', {
-            weekday: 'long',
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
+          {new Date().toLocaleDateString("en-US", {
+            weekday: "long",
+            year: "numeric",
+            month: "long",
+            day: "numeric",
           })}
         </p>
       </div>
@@ -71,7 +71,9 @@ export const TopBar: React.FC = () => {
           {notifOpen && (
             <div className="absolute right-0 mt-2 w-72 bg-white rounded-xl shadow-lg border border-gray-100 z-50">
               <div className="px-4 py-3 border-b border-gray-100 flex items-center justify-between">
-                <p className="font-semibold text-sm text-gray-800">Notifications</p>
+                <p className="font-semibold text-sm text-gray-800">
+                  Notifications
+                </p>
                 {unreadCount > 0 && (
                   <span className="text-xs font-medium text-white bg-red-500 rounded-full px-1.5 py-0.5">
                     {unreadCount}
@@ -80,8 +82,15 @@ export const TopBar: React.FC = () => {
               </div>
               <ul className="divide-y divide-gray-50">
                 {notifications.map((n) => (
-                  <li key={n.id} className="flex items-start gap-3 px-4 py-3 hover:bg-gray-50 cursor-pointer">
-                    <span className={`mt-1.5 w-2 h-2 rounded-full shrink-0 ${severityDot[n.severity] ?? 'bg-gray-400'}`} />
+                  <li
+                    key={n.id}
+                    className="flex items-start gap-3 px-4 py-3 hover:bg-gray-50 cursor-pointer"
+                  >
+                    <span
+                      className={`mt-1.5 w-2 h-2 rounded-full shrink-0 ${
+                        severityDot[n.severity] ?? "bg-gray-400"
+                      }`}
+                    />
                     <div>
                       <p className="text-sm text-gray-700">{n.text}</p>
                       <p className="text-xs text-gray-400 mt-0.5">{n.time}</p>
@@ -90,7 +99,10 @@ export const TopBar: React.FC = () => {
                 ))}
               </ul>
               <div className="px-4 py-2.5 text-center">
-                <button type="button" className="text-xs text-violet-600 hover:underline font-medium">
+                <button
+                  type="button"
+                  className="text-xs text-violet-600 hover:underline font-medium"
+                >
                   View all notifications
                 </button>
               </div>
@@ -107,7 +119,9 @@ export const TopBar: React.FC = () => {
             <User size={16} />
           </div>
           <div className="hidden md:block text-left">
-            <p className="text-sm font-medium text-gray-800 leading-none">Admin</p>
+            <p className="text-sm font-medium text-gray-800 leading-none">
+              Admin
+            </p>
             <p className="text-xs text-gray-400 mt-0.5">StreamFlow</p>
           </div>
           <ChevronDown size={14} className="text-gray-400 hidden md:block" />

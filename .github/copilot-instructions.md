@@ -54,16 +54,16 @@ src/
 
 ## ✅ Conventions de nommage
 
-| Élément | Convention | Exemple |
-|---------|-----------|---------|
-| Composants | PascalCase | `KpiCard.tsx`, `Sidebar.tsx` |
-| Hooks | camelCase préfixé `use` | `useKpiData.ts` |
-| Pages | PascalCase suffixé `Page` | `DashboardPage.tsx` |
-| Layouts | PascalCase suffixé `Layout` | `RootLayout.tsx` |
-| Services | camelCase | `technicalService.ts` |
-| Types/Interfaces | PascalCase préfixé `I` pour interfaces | `IKpiCard`, `KpiStatus` |
-| Constantes | SCREAMING_SNAKE_CASE | `API_BASE_URL` |
-| Fichiers utilitaires | camelCase | `formatNumber.ts` |
+| Élément              | Convention                             | Exemple                      |
+| -------------------- | -------------------------------------- | ---------------------------- |
+| Composants           | PascalCase                             | `KpiCard.tsx`, `Sidebar.tsx` |
+| Hooks                | camelCase préfixé `use`                | `useKpiData.ts`              |
+| Pages                | PascalCase suffixé `Page`              | `DashboardPage.tsx`          |
+| Layouts              | PascalCase suffixé `Layout`            | `RootLayout.tsx`             |
+| Services             | camelCase                              | `technicalService.ts`        |
+| Types/Interfaces     | PascalCase préfixé `I` pour interfaces | `IKpiCard`, `KpiStatus`      |
+| Constantes           | SCREAMING_SNAKE_CASE                   | `API_BASE_URL`               |
+| Fichiers utilitaires | camelCase                              | `formatNumber.ts`            |
 
 ---
 
@@ -120,11 +120,11 @@ export default function kpicard(props: any) { ... }
 
 ```typescript
 // src/services/api/technical.ts
-const BASE_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:8080';
+const BASE_URL = import.meta.env.VITE_API_URL ?? "http://localhost:8080";
 
 export async function fetchTechnicalOverview(): Promise<TechnicalOverview> {
   const res = await fetch(`${BASE_URL}/api/technical/overview`);
-  if (!res.ok) throw new Error('Failed to fetch technical overview');
+  if (!res.ok) throw new Error("Failed to fetch technical overview");
   return res.json();
 }
 ```
@@ -197,7 +197,7 @@ export const DashboardPage: React.FC = () => {
 
 ```typescript
 // ✅ Bon
-type KpiStatus = 'ok' | 'warning' | 'critical';
+type KpiStatus = "ok" | "warning" | "critical";
 
 interface KpiMetric {
   value: number;
@@ -207,7 +207,7 @@ interface KpiMetric {
 }
 
 // ❌ Mauvais
-const kpi: any = { value: 4, status: 'critical' };
+const kpi: any = { value: 4, status: "critical" };
 ```
 
 ---
@@ -220,13 +220,13 @@ const kpi: any = { value: 4, status: 'critical' };
 
 ```tsx
 // ✅ Ordre correct
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { BarChart } from 'recharts';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { BarChart } from "recharts";
 
-import { KpiCard } from '@/components/ui/KpiCard';
-import { useTechnicalKpis } from '@/features/technical/hooks/useTechnicalKpis';
-import type { KpiMetric } from '@/types';
+import { KpiCard } from "@/components/ui/KpiCard";
+import { useTechnicalKpis } from "@/features/technical/hooks/useTechnicalKpis";
+import type { KpiMetric } from "@/types";
 ```
 
 ---

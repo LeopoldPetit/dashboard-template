@@ -1,6 +1,6 @@
-import { GitBranch } from 'lucide-react';
-import { DeploymentStatsSection } from '@/features/devops/components/DeploymentStatsSection';
-import { TeamCompositionCard } from '@/features/devops/components/TeamCompositionCard';
+import { GitBranch } from "lucide-react";
+import { DeploymentStatsSection } from "@/features/devops/components/DeploymentStatsSection";
+import { TeamCompositionCard } from "@/features/devops/components/TeamCompositionCard";
 
 export default function DevOpsPage() {
   return (

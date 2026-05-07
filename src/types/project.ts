@@ -16,7 +16,7 @@ export interface IProjectOverview {
   period: string;
 }
 
-export type SprintStatus = 'completed' | 'active' | 'planned';
+export type SprintStatus = "completed" | "active" | "planned";
 
 export interface ISprint {
   id: number;
@@ -32,7 +32,7 @@ export interface ISprintSummary {
   totalPlanned: number;
   totalDone: number;
   averageVelocityPercent: number;
-  trend: 'increasing' | 'stable' | 'declining';
+  trend: "increasing" | "stable" | "declining";
 }
 
 export interface IProjectSprintsResponse {
