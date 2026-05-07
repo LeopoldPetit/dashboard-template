@@ -1,14 +1,21 @@
-import { Card } from '@/components/ui/Card';
-import { Activity } from 'lucide-react';
+import { TechnicalKpiSection } from '@/features/technical/components/TechnicalKpiSection';
+import { ResponseTimeChart } from '@/features/technical/components/ResponseTimeChart';
+import { IncidentsTable } from '@/features/technical/components/IncidentsTable';
 
 export default function TechnicalPage() {
   return (
     <div className="space-y-6">
-      <Card className="flex flex-col items-center justify-center py-20 text-center">
-        <Activity size={40} className="text-violet-400 mb-4" />
-        <h2 className="text-lg font-semibold text-gray-700">Technical Overview</h2>
-        <p className="text-sm text-gray-400 mt-1">Coming soon — connect your WireMock backend.</p>
-      </Card>
+      <div>
+        <h1 className="text-xl font-bold text-gray-900">Vue Technique</h1>
+        <p className="text-sm text-gray-500 mt-0.5">Supervision des indicateurs système — 30 derniers jours</p>
+      </div>
+
+      <TechnicalKpiSection />
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <ResponseTimeChart />
+        <IncidentsTable />
+      </div>
     </div>
   );
 }
