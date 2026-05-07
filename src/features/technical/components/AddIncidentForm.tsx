@@ -1,3 +1,9 @@
+/**
+ * Trigger button + modal form for creating a new technical incident.
+ *
+ * Renders a red-tinted "Ajouter" button that opens a {@link Modal}.
+ * On successful submission it calls `onSuccess` so the parent can trigger a data refetch.
+ */
 import React, { useState } from "react";
 import { Plus } from "lucide-react";
 import { Modal } from "@/components/ui/Modal";
@@ -5,9 +11,11 @@ import { postIncident } from "@/services/api/technical";
 import type { ITechnicalIncident } from "@/types";
 
 interface AddIncidentFormProps {
+  /** Callback invoked after a new incident has been successfully persisted. */
   onSuccess: () => void;
 }
 
+/** All valid severity levels for a technical incident. */
 const SEVERITY_OPTIONS: ITechnicalIncident["severity"][] = [
   "low",
   "medium",
@@ -15,6 +23,7 @@ const SEVERITY_OPTIONS: ITechnicalIncident["severity"][] = [
   "critical",
 ];
 
+/** All valid lifecycle statuses for a technical incident. */
 const STATUS_OPTIONS: ITechnicalIncident["status"][] = [
   "open",
   "in_progress",
@@ -34,6 +43,7 @@ export const AddIncidentForm: React.FC<AddIncidentFormProps> = ({
   const [submitting, setSubmitting] = useState(false);
   const [err, setErr] = useState<string | null>(null);
 
+  /** Resets all form fields and clears any error state. */
   const reset = () => {
     setTitle("");
     setDurationHours("");
@@ -64,6 +74,7 @@ export const AddIncidentForm: React.FC<AddIncidentFormProps> = ({
         severity,
         status,
       });
+      // Notify parent so it can call refetch() and refresh the incident list.
       onSuccess();
       handleClose();
     } catch {

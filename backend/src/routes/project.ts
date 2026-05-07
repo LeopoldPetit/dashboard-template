@@ -1,9 +1,20 @@
+/**
+ * @module routes/project
+ * Express router for the Project domain.
+ *
+ * Endpoints:
+ *   GET  /api/project/overview  — Latest project KPI snapshot (bugs, features, fix rate).
+ *   GET  /api/project/sprints   — Sprint list + velocity summary.
+ *   POST /api/project/overview  — Insert a new project overview snapshot.
+ *   POST /api/project/sprints   — Create a new sprint record.
+ */
 import { Router, Request, Response } from "express";
 import { pool } from "../db";
 import { requireFields } from "../validate";
 
 export const projectRouter = Router();
 
+// GET /api/project/overview — returns the most recent project KPI snapshot.
 projectRouter.get("/overview", async (_req: Request, res: Response) => {
   const { rows } = await pool.query<{
     bugs_detected: number;
@@ -29,6 +40,7 @@ projectRouter.get("/overview", async (_req: Request, res: Response) => {
   });
 });
 
+// GET /api/project/sprints — returns all sprints and an aggregate velocity summary.
 projectRouter.get("/sprints", async (_req: Request, res: Response) => {
   const [sprints, summary] = await Promise.all([
     pool.query<{
@@ -73,7 +85,7 @@ projectRouter.get("/sprints", async (_req: Request, res: Response) => {
 
 // ── POST routes ────────────────────────────────────────────────────────────────
 
-// POST /api/project/overview
+// POST /api/project/overview — inserts a new project KPI snapshot row.
 projectRouter.post("/overview", async (req: Request, res: Response) => {
   const b = req.body as Record<string, unknown>;
   const required = [
@@ -104,7 +116,8 @@ projectRouter.post("/overview", async (req: Request, res: Response) => {
   res.status(201).json({ id: rows[0].id });
 });
 
-// POST /api/project/sprints
+// POST /api/project/sprints — creates a new sprint record.
+// `sprintId` is sent by the client (Date.now()); the DB also assigns its own `id` PK.
 projectRouter.post("/sprints", async (req: Request, res: Response) => {
   const b = req.body as Record<string, unknown>;
   const required = [

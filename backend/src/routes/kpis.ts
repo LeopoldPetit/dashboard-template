@@ -1,9 +1,19 @@
+/**
+ * @module routes/kpis
+ * Express router for the cross-domain KPI summary.
+ *
+ * Endpoints:
+ *   GET  /api/kpis/summary — Aggregated KPI snapshot across all domains, grouped by domain key.
+ *   POST /api/kpis/summary — Insert a new KPI summary with its associated metric rows.
+ */
 import { Router, Request, Response } from "express";
 import { pool } from "../db";
 import { requireFields } from "../validate";
 
 export const kpisRouter = Router();
 
+// GET /api/kpis/summary — returns the latest summary row and joins its metrics,
+// reshaping them into a nested domain → metricKey object for easy frontend consumption.
 kpisRouter.get("/summary", async (_req: Request, res: Response) => {
   const [summaryRes, metricsRes] = await Promise.all([
     pool.query<{
@@ -31,6 +41,7 @@ kpisRouter.get("/summary", async (_req: Request, res: Response) => {
   const s = summaryRes.rows[0];
   const metricsByDomain: Record<string, Record<string, unknown>> = {};
 
+  // Filter metrics to the current summary id before grouping.
   for (const m of metricsRes.rows.filter((r) => r.summary_id === s.id)) {
     if (!metricsByDomain[m.domain]) metricsByDomain[m.domain] = {};
     metricsByDomain[m.domain][m.metric_key] = {
@@ -50,9 +61,7 @@ kpisRouter.get("/summary", async (_req: Request, res: Response) => {
   });
 });
 
-// ── POST routes ────────────────────────────────────────────────────────────────
-
-// POST /api/kpis/summary
+// POST /api/kpis/summary — inserts a summary row then bulk-inserts its metric rows sequentially.
 // Body: { generatedAt, period, company, globalStatus, metrics: [{ domain, metricKey, value, unit, status, threshold? }] }
 kpisRouter.post("/summary", async (req: Request, res: Response) => {
   const b = req.body as Record<string, unknown>;
@@ -81,6 +90,7 @@ kpisRouter.post("/summary", async (req: Request, res: Response) => {
   );
   const summaryId = rows[0].id;
 
+  // Insert each metric row individually, linking it to the parent summary via summaryId.
   for (const m of metrics) {
     await pool.query(
       `INSERT INTO kpi_metrics (summary_id, domain, metric_key, value, unit, status, threshold)

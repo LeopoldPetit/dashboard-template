@@ -1,9 +1,18 @@
+/**
+ * @module routes/notifications
+ * Express router for the Notifications domain.
+ *
+ * Endpoints:
+ *   GET  /api/notifications — Returns all notifications and the count of unread ones.
+ *   POST /api/notifications — Creates a new notification entry.
+ */
 import { Router, Request, Response } from "express";
 import { pool } from "../db";
 import { requireFields } from "../validate";
 
 export const notificationsRouter = Router();
 
+// GET /api/notifications — fetches all notifications; unreadCount is computed in-memory from is_read.
 notificationsRouter.get("/", async (_req: Request, res: Response) => {
   const { rows } = await pool.query<{
     id: number;
@@ -26,7 +35,7 @@ notificationsRouter.get("/", async (_req: Request, res: Response) => {
   });
 });
 
-// POST /api/notifications
+// POST /api/notifications — creates a new notification; `isRead` defaults to false if omitted.
 notificationsRouter.post("/", async (req: Request, res: Response) => {
   const b = req.body as Record<string, unknown>;
   if (!requireFields(b, ["text", "time", "severity"], res)) return;

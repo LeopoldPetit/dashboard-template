@@ -3,7 +3,8 @@ import { fetchBusinessOverview } from "@/services/api/business";
 import type { IBusinessOverview } from "@/types";
 
 /**
- * Hook exposant les données d'overview business (revenue, ARPU, conversions, churn).
+ * Fetches the business overview: revenue, ARPU, conversion rates, and churn metrics.
+ * Exposes { data, loading, error }.
  */
 export function useBusinessOverview() {
   const [data, setData] = useState<IBusinessOverview | null>(null);

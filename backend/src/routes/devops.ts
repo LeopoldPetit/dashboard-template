@@ -1,9 +1,18 @@
+/**
+ * @module routes/devops
+ * Express router for the DevOps domain.
+ *
+ * Endpoints:
+ *   GET  /api/devops/overview — Latest deployment stats, lead time, and team composition.
+ *   POST /api/devops/overview — Insert a new DevOps overview snapshot (used when updating team headcount).
+ */
 import { Router, Request, Response } from "express";
 import { pool } from "../db";
 import { requireFields } from "../validate";
 
 export const devopsRouter = Router();
 
+// GET /api/devops/overview — returns the most recent DevOps overview snapshot.
 devopsRouter.get("/overview", async (_req: Request, res: Response) => {
   const { rows } = await pool.query<{
     deploy_total: number;
@@ -40,7 +49,7 @@ devopsRouter.get("/overview", async (_req: Request, res: Response) => {
 
 // ── POST routes ────────────────────────────────────────────────────────────────
 
-// POST /api/devops/overview
+// POST /api/devops/overview — inserts a full DevOps snapshot row (flat payload mapped to normalised columns).
 devopsRouter.post("/overview", async (req: Request, res: Response) => {
   const b = req.body as Record<string, unknown>;
   const required = [

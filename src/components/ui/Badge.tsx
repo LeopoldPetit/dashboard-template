@@ -1,12 +1,19 @@
+/**
+ * Inline status badge with colour-coded variants.
+ * Used throughout the dashboard to surface OK / warning / critical states at a glance.
+ */
 import React from "react";
 import { clsx } from "clsx";
 
 interface BadgeProps {
+  /** Visual variant that drives the colour scheme. Defaults to "default". */
   variant?: "ok" | "warning" | "critical" | "info" | "default";
   children: React.ReactNode;
+  /** Additional Tailwind classes to merge onto the badge element. */
   className?: string;
 }
 
+// Tailwind class sets for each variant, including border for definition on white backgrounds.
 const variantStyles: Record<NonNullable<BadgeProps["variant"]>, string> = {
   ok: "bg-emerald-100 text-emerald-700 border border-emerald-200",
   warning: "bg-amber-100 text-amber-700 border border-amber-200",
