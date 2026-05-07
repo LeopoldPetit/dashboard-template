@@ -51,7 +51,10 @@ export const ResponseTimeChart: React.FC = () => {
               />
               <YAxis tick={{ fontSize: 11 }} unit=" ms" />
               <Tooltip
-                formatter={(v: number) => [`${v} ms`, "Temps de réponse"]}
+                formatter={(v) => [
+                  typeof v === "number" ? `${v} ms` : v,
+                  "Temps de réponse",
+                ]}
               />
               <Area
                 type="monotone"
