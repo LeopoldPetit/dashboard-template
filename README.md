@@ -144,6 +144,95 @@ L'application sera disponible sur **http://localhost:5173**
 | **Tailwind CSS v4** | Styles utilitaires |
 | **Recharts** | Graphiques (Bar, Line, Pie) |
 | **Lucide React** | Icônes |
+| **WireMock** | Mock backend (Docker) |
+
+---
+
+## 🧪 Mock API — WireMock
+
+Le projet embarque un serveur de mock HTTP basé sur **WireMock** pour simuler le backend sans dépendance externe.
+
+### Démarrage
+
+```bash
+./wiremock/wiremock.sh
+```
+
+> Prérequis : **Docker Desktop** doit être lancé.
+
+Le serveur démarre sur **http://localhost:8080**.
+
+---
+
+### 📡 Endpoints disponibles
+
+#### ⚙️ Technique
+
+| Méthode | Endpoint | Description |
+|---------|----------|-------------|
+| `GET` | `/api/technical/overview` | Error rate, uptime, MTTR, temps de réponse moyens |
+| `GET` | `/api/technical/response-times` | Échantillon des 13 mesures + stats (min, max, avg, P50, P90, P95) |
+| `GET` | `/api/technical/incidents` | Liste des 4 incidents du mois avec durée et sévérité |
+
+#### 📋 Projet
+
+| Méthode | Endpoint | Description |
+|---------|----------|-------------|
+| `GET` | `/api/project/overview` | Bugs détectés / corrigés / ouverts, features livrées, bug rate, fix rate |
+| `GET` | `/api/project/sprints` | Vélocité des 3 derniers sprints (SP prévus vs réalisés) |
+
+#### 🚀 DevOps
+
+| Méthode | Endpoint | Description |
+|---------|----------|-------------|
+| `GET` | `/api/devops/overview` | Déploiements (total, échecs, CFR), lead time, composition équipe |
+
+#### 💼 Business
+
+| Méthode | Endpoint | Description |
+|---------|----------|-------------|
+| `GET` | `/api/business/overview` | Revenus, ARPU, churn rate, retention rate, conversion |
+| `GET` | `/api/business/users` | Évolution utilisateurs actifs (début / fin de mois) |
+
+#### 📊 KPI Global
+
+| Méthode | Endpoint | Description |
+|---------|----------|-------------|
+| `GET` | `/api/kpis/summary` | Tous les KPI calculés avec statut (`ok` / `warning` / `critical`) et seuils d'alerte |
+
+---
+
+### 🔧 Commandes utiles
+
+```bash
+# Voir les logs en direct
+docker logs -f streamflow-wiremock
+
+# Arrêter le serveur
+docker stop streamflow-wiremock
+
+# Consulter les mappings actifs (UI admin WireMock)
+open http://localhost:8080/__admin/mappings
+```
+
+---
+
+### Exemple de réponse — `/api/kpis/summary`
+
+```json
+{
+  "globalStatus": "critical",
+  "technical": {
+    "errorRate":       { "value": 4.0,  "unit": "%",  "status": "critical" },
+    "p95ResponseTime": { "value": 2500, "unit": "ms", "status": "critical" },
+    "uptime":          { "value": 99.1, "unit": "%",  "status": "warning"  }
+  },
+  "business": {
+    "churnRate":       { "value": 33.3, "unit": "%",  "status": "critical" },
+    "conversionRate":  { "value": 4.0,  "unit": "%",  "status": "warning"  }
+  }
+}
+```
 
 ---
 
