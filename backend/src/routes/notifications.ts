@@ -1,5 +1,6 @@
 import { Router, Request, Response } from 'express';
 import { pool } from '../db';
+import { requireFields } from '../validate';
 
 export const notificationsRouter = Router();
 
@@ -14,4 +15,17 @@ notificationsRouter.get('/', async (_req: Request, res: Response) => {
     })),
     unreadCount: rows.filter((r) => !r.is_read).length,
   });
+});
+
+// POST /api/notifications
+notificationsRouter.post('/', async (req: Request, res: Response) => {
+  const b = req.body as Record<string, unknown>;
+  if (!requireFields(b, ['text', 'time', 'severity'], res)) return;
+
+  const { rows } = await pool.query<{ id: number }>(
+    `INSERT INTO notifications (text, time_label, severity, is_read)
+     VALUES ($1,$2,$3,$4) RETURNING id`,
+    [b.text, b.time, b.severity, b.isRead ?? false],
+  );
+  res.status(201).json({ id: rows[0].id });
 });

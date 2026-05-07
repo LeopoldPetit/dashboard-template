@@ -1,5 +1,6 @@
 import { Router, Request, Response } from 'express';
 import { pool } from '../db';
+import { requireFields } from '../validate';
 
 export const projectRouter = Router();
 
@@ -40,4 +41,39 @@ projectRouter.get('/sprints', async (_req: Request, res: Response) => {
       averageVelocityPercent: Number(s.average_velocity_percent), trend: s.trend,
     },
   });
+});
+
+// ── POST routes ────────────────────────────────────────────────────────────────
+
+// POST /api/project/overview
+projectRouter.post('/overview', async (req: Request, res: Response) => {
+  const b = req.body as Record<string, unknown>;
+  const required = ['bugsDetected', 'bugsFixed', 'bugsOpen', 'fixRate', 'featuresDelivered', 'bugRate', 'period'];
+  if (!requireFields(b, required, res)) return;
+
+  const { rows } = await pool.query<{ id: number }>(
+    `INSERT INTO project_overview
+       (bugs_detected, bugs_fixed, bugs_open, fix_rate, features_delivered, bug_rate, period)
+     VALUES ($1,$2,$3,$4,$5,$6,$7) RETURNING id`,
+    [b.bugsDetected, b.bugsFixed, b.bugsOpen, b.fixRate, b.featuresDelivered, b.bugRate, b.period],
+  );
+  res.status(201).json({ id: rows[0].id });
+});
+
+// POST /api/project/sprints
+projectRouter.post('/sprints', async (req: Request, res: Response) => {
+  const b = req.body as Record<string, unknown>;
+  const required = [
+    'sprintId', 'name', 'shortName',
+    'storyPointsPlanned', 'storyPointsDone', 'velocityPercent', 'status',
+  ];
+  if (!requireFields(b, required, res)) return;
+
+  const { rows } = await pool.query<{ id: number }>(
+    `INSERT INTO project_sprints
+       (sprint_id, name, short_name, story_points_planned, story_points_done, velocity_percent, status)
+     VALUES ($1,$2,$3,$4,$5,$6,$7) RETURNING id`,
+    [b.sprintId, b.name, b.shortName, b.storyPointsPlanned, b.storyPointsDone, b.velocityPercent, b.status],
+  );
+  res.status(201).json({ id: rows[0].id });
 });
