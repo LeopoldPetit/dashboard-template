@@ -1,10 +1,22 @@
+/**
+ * @module routes/technical
+ * Express router for the Technical domain.
+ *
+ * Endpoints:
+ *   GET  /api/technical/overview        — Latest system health KPIs snapshot.
+ *   GET  /api/technical/incidents       — Incident list + summary statistics.
+ *   GET  /api/technical/response-times  — Response-time samples + percentile stats.
+ *   POST /api/technical/overview        — Insert a new technical overview snapshot.
+ *   POST /api/technical/incidents       — Create a new incident record.
+ *   POST /api/technical/response-times  — Bulk-insert new response-time samples.
+ */
 import { Router, Request, Response } from "express";
 import { pool } from "../db";
 import { requireFields } from "../validate";
 
 export const technicalRouter = Router();
 
-// GET /api/technical/overview
+// GET /api/technical/overview — returns the most recent technical KPI snapshot.
 technicalRouter.get("/overview", async (_req: Request, res: Response) => {
   const { rows } = await pool.query<{
     total_requests: string;
@@ -35,7 +47,7 @@ technicalRouter.get("/overview", async (_req: Request, res: Response) => {
   });
 });
 
-// GET /api/technical/incidents
+// GET /api/technical/incidents — returns incident list and aggregate summary.
 technicalRouter.get("/incidents", async (_req: Request, res: Response) => {
   const [incidents, summary] = await Promise.all([
     pool.query<{
@@ -76,7 +88,7 @@ technicalRouter.get("/incidents", async (_req: Request, res: Response) => {
   });
 });
 
-// GET /api/technical/response-times
+// GET /api/technical/response-times — returns time-series samples and percentile stats.
 technicalRouter.get("/response-times", async (_req: Request, res: Response) => {
   const [samples, stats] = await Promise.all([
     pool.query<{ sample_index: number; ms: number }>(
@@ -110,7 +122,7 @@ technicalRouter.get("/response-times", async (_req: Request, res: Response) => {
 
 // ── POST routes ────────────────────────────────────────────────────────────────
 
-// POST /api/technical/overview
+// POST /api/technical/overview — inserts a new technical KPI snapshot row.
 technicalRouter.post("/overview", async (req: Request, res: Response) => {
   const b = req.body as Record<string, unknown>;
   const required = [
@@ -147,7 +159,7 @@ technicalRouter.post("/overview", async (req: Request, res: Response) => {
   res.status(201).json({ id: rows[0].id });
 });
 
-// POST /api/technical/incidents
+// POST /api/technical/incidents — creates a new incident record.
 technicalRouter.post("/incidents", async (req: Request, res: Response) => {
   const b = req.body as Record<string, unknown>;
   const required = [
@@ -167,7 +179,7 @@ technicalRouter.post("/incidents", async (req: Request, res: Response) => {
   res.status(201).json({ id: rows[0].id });
 });
 
-// POST /api/technical/response-times
+// POST /api/technical/response-times — bulk-inserts new samples and a stats row.
 technicalRouter.post("/response-times", async (req: Request, res: Response) => {
   const b = req.body as Record<string, unknown>;
   if (!requireFields(b, ["samples", "stats"], res)) return;
@@ -188,6 +200,8 @@ technicalRouter.post("/response-times", async (req: Request, res: Response) => {
     [stats.min, stats.max, stats.average, stats.p50, stats.p90, stats.p95],
   );
 
+  // Insert each sample individually; a bulk VALUES approach would be more
+  // efficient at scale but kept simple here for readability.
   for (const s of samples) {
     await pool.query(
       "INSERT INTO technical_response_time_samples (sample_index, ms) VALUES ($1,$2)",

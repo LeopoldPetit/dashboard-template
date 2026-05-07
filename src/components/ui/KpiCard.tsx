@@ -1,3 +1,7 @@
+/**
+ * Metric card displaying a single KPI with its status, value, unit, trend, and description.
+ * Renders a coloured {@link Badge} for the status and directional trend icons.
+ */
 import React from "react";
 import { TrendingUp, TrendingDown, Minus } from "lucide-react";
 import { clsx } from "clsx";
@@ -7,6 +11,7 @@ import type { IKpiCard, KpiStatus } from "@/types";
 
 type KpiCardProps = IKpiCard;
 
+/** Human-readable labels for each KPI status value. */
 const statusLabel: Record<KpiStatus, string> = {
   ok: "OK",
   warning: "Warning",
@@ -21,6 +26,7 @@ export const KpiCard: React.FC<KpiCardProps> = ({
   trend,
   description,
 }) => {
+  // Select the appropriate trend icon based on direction (undefined = neutral).
   const trendIcon =
     trend === undefined ? (
       <Minus size={14} />
@@ -30,6 +36,7 @@ export const KpiCard: React.FC<KpiCardProps> = ({
       <TrendingDown size={14} />
     );
 
+  // Positive trends are green, negative are red, neutral is gray.
   const trendColor =
     trend === undefined
       ? "text-gray-400"

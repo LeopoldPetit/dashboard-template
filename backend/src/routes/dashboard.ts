@@ -1,9 +1,22 @@
+/**
+ * @module routes/dashboard
+ * Express router for the Dashboard domain.
+ *
+ * Endpoints:
+ *   GET  /api/dashboard/overview        — Aggregated KPIs, request volume, weekly deploys, recent activity.
+ *   POST /api/dashboard/kpis            — Insert a new KPI card entry.
+ *   POST /api/dashboard/request-volume  — Insert a new request-volume data point.
+ *   POST /api/dashboard/weekly-deploys  — Insert a new weekly-deploy data point.
+ *   POST /api/dashboard/activity        — Create a new activity feed entry.
+ */
 import { Router, Request, Response } from "express";
 import { pool } from "../db";
 import { requireFields } from "../validate";
 
 export const dashboardRouter = Router();
 
+// GET /api/dashboard/overview — aggregates KPIs, charts and activity in a single response.
+// All four queries are run in parallel via Promise.all for optimal latency.
 dashboardRouter.get("/overview", async (_req: Request, res: Response) => {
   const [kpis, requestVolume, weeklyDeploys, recentActivity] =
     await Promise.all([
@@ -56,7 +69,7 @@ dashboardRouter.get("/overview", async (_req: Request, res: Response) => {
 
 // ── POST routes ────────────────────────────────────────────────────────────────
 
-// POST /api/dashboard/kpis
+// POST /api/dashboard/kpis — inserts a new KPI card row; optional fields default to null.
 dashboardRouter.post("/kpis", async (req: Request, res: Response) => {
   const b = req.body as Record<string, unknown>;
   if (!requireFields(b, ["title", "value", "status"], res)) return;
@@ -76,7 +89,7 @@ dashboardRouter.post("/kpis", async (req: Request, res: Response) => {
   res.status(201).json({ id: rows[0].id });
 });
 
-// POST /api/dashboard/request-volume
+// POST /api/dashboard/request-volume — adds a single request-volume sample point.
 dashboardRouter.post("/request-volume", async (req: Request, res: Response) => {
   const b = req.body as Record<string, unknown>;
   if (!requireFields(b, ["time", "requests"], res)) return;
@@ -88,7 +101,7 @@ dashboardRouter.post("/request-volume", async (req: Request, res: Response) => {
   res.status(201).json({ id: rows[0].id });
 });
 
-// POST /api/dashboard/weekly-deploys
+// POST /api/dashboard/weekly-deploys — adds a single day-level deploy/failure record.
 dashboardRouter.post("/weekly-deploys", async (req: Request, res: Response) => {
   const b = req.body as Record<string, unknown>;
   if (!requireFields(b, ["day", "deploys", "failures"], res)) return;
@@ -100,7 +113,7 @@ dashboardRouter.post("/weekly-deploys", async (req: Request, res: Response) => {
   res.status(201).json({ id: rows[0].id });
 });
 
-// POST /api/dashboard/activity
+// POST /api/dashboard/activity — appends a new entry to the recent-activity feed.
 dashboardRouter.post("/activity", async (req: Request, res: Response) => {
   const b = req.body as Record<string, unknown>;
   if (!requireFields(b, ["label", "time", "severity"], res)) return;

@@ -1,9 +1,20 @@
+/**
+ * @module routes/business
+ * Express router for the Business domain.
+ *
+ * Endpoints:
+ *   GET  /api/business/overview — Revenue, ARPU, conversions, and churn KPIs.
+ *   GET  /api/business/users    — User stats (totals, actives, new/churned) + monthly evolution.
+ *   POST /api/business/overview — Insert a new business overview snapshot.
+ *   POST /api/business/users    — Persist updated user statistics.
+ */
 import { Router, Request, Response } from "express";
 import { pool } from "../db";
 import { requireFields } from "../validate";
 
 export const businessRouter = Router();
 
+// GET /api/business/overview — returns the most recent business KPI snapshot.
 businessRouter.get("/overview", async (_req: Request, res: Response) => {
   const { rows } = await pool.query<{
     revenue_total: string;
@@ -41,6 +52,7 @@ businessRouter.get("/overview", async (_req: Request, res: Response) => {
   });
 });
 
+// GET /api/business/users — returns current user stats joined with monthly evolution data.
 businessRouter.get("/users", async (_req: Request, res: Response) => {
   const [users, evolution] = await Promise.all([
     pool.query<{
@@ -73,7 +85,7 @@ businessRouter.get("/users", async (_req: Request, res: Response) => {
 
 // ── POST routes ────────────────────────────────────────────────────────────────
 
-// POST /api/business/overview
+// POST /api/business/overview — inserts a new business overview snapshot row.
 businessRouter.post("/overview", async (req: Request, res: Response) => {
   const b = req.body as Record<string, unknown>;
   const required = [
@@ -117,7 +129,7 @@ businessRouter.post("/overview", async (req: Request, res: Response) => {
   res.status(201).json({ id: rows[0].id });
 });
 
-// POST /api/business/users
+// POST /api/business/users — persists an updated user-stats snapshot (called after inline edit in the UI).
 businessRouter.post("/users", async (req: Request, res: Response) => {
   const b = req.body as Record<string, unknown>;
   const required = [

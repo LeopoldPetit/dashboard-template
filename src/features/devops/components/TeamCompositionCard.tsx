@@ -1,20 +1,33 @@
+/**
+ * @file TeamCompositionCard.tsx
+ * Displays the DevOps team headcount broken down by role.
+ * Each role row exposes +/- buttons that immediately persist the updated count
+ * by POSTing the full current DevOps overview snapshot to the backend.
+ */
 import React, { useState } from "react";
 import { Users, Code2, Settings2, Briefcase, Plus, Minus } from "lucide-react";
 import { Card } from "@/components/ui/Card";
 import { useDevOpsOverview } from "@/features/devops/hooks/useDevOpsOverview";
 import { postDevOpsOverview } from "@/services/api/devops";
 
+/** Union type of team-composition keys to allow generic delta updates. */
 type TeamKey = "developers" | "devops" | "productOwner" | "cto";
 
 interface TeamMemberRowProps {
   icon: React.ReactNode;
   label: string;
+  /** Current headcount for this role. */
   count: number;
   onIncrement: () => void;
   onDecrement: () => void;
+  /** Disables buttons while a PATCH/POST is in flight. */
   saving: boolean;
 }
 
+/**
+ * Single row inside the team-composition list.
+ * Shows an icon, role name, current count, and increment/decrement controls.
+ */
 const TeamMemberRow: React.FC<TeamMemberRowProps> = ({
   icon,
   label,
@@ -69,6 +82,10 @@ export const TeamCompositionCard: React.FC = () => {
   const { team, deployments, leadTime } = data;
   const total = team.developers + team.devops + team.productOwner + team.cto;
 
+  /**
+   * Applies a delta (+1 / -1) to the given team role, clamps the result to 0,
+   * persists the full DevOps snapshot, and triggers a refetch to sync UI state.
+   */
   const updateTeam = async (key: TeamKey, delta: number) => {
     const newTeam = { ...team, [key]: Math.max(0, team[key] + delta) };
     setSaving(true);
@@ -92,6 +109,7 @@ export const TeamCompositionCard: React.FC = () => {
     }
   };
 
+  /** Role definitions used to render the team rows declaratively. */
   const rows: { key: TeamKey; icon: React.ReactNode; label: string }[] = [
     { key: "developers", icon: <Code2 size={16} />, label: "Développeurs" },
     { key: "devops", icon: <Settings2 size={16} />, label: "DevOps" },

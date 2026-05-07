@@ -1,3 +1,10 @@
+/**
+ * @module index
+ * Express application entry point for the StreamFlow API.
+ *
+ * Mounts all domain routers under `/api/*`, exposes a `/health` liveness probe,
+ * and registers a global error handler as a safety net for unhandled exceptions.
+ */
 import express, { NextFunction, Request, Response } from "express";
 import cors from "cors";
 
@@ -15,6 +22,7 @@ const PORT = process.env.PORT ?? 3001;
 app.use(cors());
 app.use(express.json());
 
+// ── Domain routers ─────────────────────────────────────────────────────────────
 app.use("/api/technical", technicalRouter);
 app.use("/api/project", projectRouter);
 app.use("/api/devops", devopsRouter);
@@ -23,11 +31,12 @@ app.use("/api/dashboard", dashboardRouter);
 app.use("/api/notifications", notificationsRouter);
 app.use("/api/kpis", kpisRouter);
 
+/** Liveness probe used by `start.sh` and container orchestrators. */
 app.get("/health", (_req: Request, res: Response) =>
   res.json({ status: "ok" }),
 );
 
-// Global error handler
+// Global error handler — catches any error thrown inside async route handlers.
 app.use((err: Error, _req: Request, res: Response, next: NextFunction) => {
   if (res.headersSent) return next(err);
   console.error(err.message);

@@ -1,3 +1,10 @@
+/**
+ * Trigger button + modal form for creating a new sprint.
+ *
+ * Automatically derives `velocityPercent` from the story-points fields so users
+ * never have to compute it manually.
+ * On successful submission it calls `onSuccess` so the parent can trigger a data refetch.
+ */
 import React, { useState } from "react";
 import { Plus } from "lucide-react";
 import { Modal } from "@/components/ui/Modal";
@@ -5,9 +12,11 @@ import { postSprint } from "@/services/api/project";
 import type { SprintStatus } from "@/types";
 
 interface AddSprintFormProps {
+  /** Callback invoked after a new sprint has been successfully persisted. */
   onSuccess: () => void;
 }
 
+/** All valid sprint lifecycle statuses. */
 const STATUS_OPTIONS: SprintStatus[] = ["planned", "active", "completed"];
 
 export const AddSprintForm: React.FC<AddSprintFormProps> = ({ onSuccess }) => {
@@ -20,6 +29,7 @@ export const AddSprintForm: React.FC<AddSprintFormProps> = ({ onSuccess }) => {
   const [submitting, setSubmitting] = useState(false);
   const [err, setErr] = useState<string | null>(null);
 
+  /** Resets all form fields and clears any error state. */
   const reset = () => {
     setName("");
     setShortName("");
@@ -42,6 +52,7 @@ export const AddSprintForm: React.FC<AddSprintFormProps> = ({ onSuccess }) => {
     }
     const storyPointsPlanned = Number(planned);
     const storyPointsDone = Number(done);
+    // Derived metric: avoid division-by-zero when planned is 0.
     const velocityPercent =
       storyPointsPlanned > 0
         ? Math.round((storyPointsDone / storyPointsPlanned) * 100)
@@ -58,6 +69,7 @@ export const AddSprintForm: React.FC<AddSprintFormProps> = ({ onSuccess }) => {
         velocityPercent,
         status,
       });
+      // Notify parent so it can call refetch() and refresh the sprint chart.
       onSuccess();
       handleClose();
     } catch {

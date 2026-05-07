@@ -1,3 +1,9 @@
+/**
+ * Trigger button + modal form for creating a new dashboard activity entry.
+ *
+ * Renders a small "Ajouter" button that opens a {@link Modal}.
+ * On successful submission it calls `onSuccess` so the parent can trigger a data refetch.
+ */
 import React, { useState } from "react";
 import { Plus } from "lucide-react";
 import { Modal } from "@/components/ui/Modal";
@@ -5,9 +11,11 @@ import { postActivity } from "@/services/api/dashboard";
 import type { IActivityItem } from "@/types";
 
 interface AddActivityFormProps {
+  /** Callback invoked after a new activity has been successfully persisted. */
   onSuccess: () => void;
 }
 
+/** All valid severity levels for an activity item. */
 const SEVERITY_OPTIONS: IActivityItem["severity"][] = [
   "info",
   "ok",
@@ -25,6 +33,7 @@ export const AddActivityForm: React.FC<AddActivityFormProps> = ({
   const [submitting, setSubmitting] = useState(false);
   const [err, setErr] = useState<string | null>(null);
 
+  /** Resets all form fields and clears any error state. */
   const reset = () => {
     setLabel("");
     setTime("");
@@ -47,6 +56,7 @@ export const AddActivityForm: React.FC<AddActivityFormProps> = ({
     setErr(null);
     try {
       await postActivity({ label: label.trim(), time: time.trim(), severity });
+      // Notify parent so it can call refetch() and refresh the activity feed.
       onSuccess();
       handleClose();
     } catch {

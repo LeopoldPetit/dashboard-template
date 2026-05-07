@@ -1,9 +1,21 @@
+/**
+ * Reusable modal overlay component.
+ *
+ * Features:
+ * - Closes on Escape key press.
+ * - Closes when clicking the dark backdrop.
+ * - Stops click propagation on the inner panel to prevent accidental dismissal.
+ * - Renders nothing when `open` is false (avoids mounting cost).
+ */
 import React, { useEffect } from "react";
 import { X } from "lucide-react";
 
 interface ModalProps {
+  /** Whether the modal is visible. */
   open: boolean;
+  /** Callback invoked when the modal should close (Escape, backdrop click, or close button). */
   onClose: () => void;
+  /** Text displayed in the modal header. */
   title: string;
   children: React.ReactNode;
 }
@@ -14,6 +26,7 @@ export const Modal: React.FC<ModalProps> = ({
   title,
   children,
 }) => {
+  // Register a keyboard listener only while the modal is open.
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => {
@@ -26,10 +39,12 @@ export const Modal: React.FC<ModalProps> = ({
   if (!open) return null;
 
   return (
+    // Backdrop — clicking it closes the modal.
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm"
       onClick={onClose}
     >
+      {/* Panel — stops propagation so clicks inside don't bubble to the backdrop. */}
       <div
         className="relative bg-white rounded-2xl shadow-xl w-full max-w-md mx-4 p-6"
         onClick={(e) => e.stopPropagation()}
