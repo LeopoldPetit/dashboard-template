@@ -1,4 +1,4 @@
-import { Response } from 'express';
+import { Response } from "express";
 
 /**
  * Vérifie que tous les champs requis sont présents dans le body.
@@ -9,9 +9,13 @@ export function requireFields(
   fields: string[],
   res: Response,
 ): boolean {
-  const missing = fields.filter((f) => body[f] === undefined || body[f] === null);
+  const missing = fields.filter(
+    (f) => body[f] === undefined || body[f] === null,
+  );
   if (missing.length > 0) {
-    res.status(400).json({ error: `Champs requis manquants : ${missing.join(', ')}` });
+    res
+      .status(400)
+      .json({ error: `Champs requis manquants : ${missing.join(", ")}` });
     return false;
   }
   return true;
