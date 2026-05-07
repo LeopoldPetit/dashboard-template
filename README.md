@@ -159,7 +159,39 @@ Vélocité -42% → Moins de features → Moins de rétention
 - **Docker Desktop** (pour le backend et la base de données)
 - **Python 3.x** (pour pre-commit)
 
-### Frontend
+### ⚡ Lancement en une seule commande
+
+```bash
+git clone https://github.com/LeopoldPetit/dashboard-template.git
+cd dashboard-template
+npm install
+./start.sh
+```
+
+Ou via npm :
+
+```bash
+npm run dev:full
+```
+
+Le script `start.sh` :
+
+1. Vérifie que Docker et Node.js sont disponibles
+2. Démarre **PostgreSQL + Flyway + Backend** via Docker Compose
+3. Attend que le backend soit healthy sur <http://localhost:3001>
+4. Crée `.env.local` automatiquement si absent
+5. Lance **Vite** (frontend) en foreground
+6. **Ctrl+C** arrête tout proprement (frontend + Docker Compose)
+
+| Service  | URL                                 |
+| -------- | ----------------------------------- |
+| Frontend | <http://localhost:5173>             |
+| Backend  | <http://localhost:3001>             |
+| Base PG  | `localhost:5432` (user: streamflow) |
+
+### Lancement manuel (par composant)
+
+#### Frontend seul
 
 ```bash
 # Cloner le projet
@@ -178,7 +210,26 @@ npm run build
 
 L'application sera disponible sur <http://localhost:5173>
 
-### Backend (API Node.js + PostgreSQL)
+#### Backend (API Node.js + PostgreSQL)
+
+```bash
+# Cloner le projet
+git clone https://github.com/LeopoldPetit/dashboard-template.git
+cd dashboard-template
+
+# Installer les dépendances
+npm install
+
+# Lancer en développement
+npm run dev
+
+# Builder pour la production
+npm run build
+```
+
+L'application sera disponible sur <http://localhost:5173>
+
+#### Backend seul (API Node.js + PostgreSQL)
 
 ```bash
 # Démarrer PostgreSQL via Docker Compose
