@@ -1,14 +1,26 @@
-import { Card } from '@/components/ui/Card';
-import { BarChart3 } from 'lucide-react';
+import { BusinessKpiSection } from '@/features/business/components/BusinessKpiSection';
+import { UserEvolutionChart } from '@/features/business/components/UserEvolutionChart';
+import { UserStatsCard } from '@/features/business/components/UserStatsCard';
+import { ConversionFunnelChart } from '@/features/business/components/ConversionFunnelChart';
 
 export default function BusinessPage() {
   return (
     <div className="space-y-6">
-      <Card className="flex flex-col items-center justify-center py-20 text-center">
-        <BarChart3 size={40} className="text-violet-400 mb-4" />
-        <h2 className="text-lg font-semibold text-gray-700">Business</h2>
-        <p className="text-sm text-gray-400 mt-1">Coming soon — connect your WireMock backend.</p>
-      </Card>
+      <div>
+        <h1 className="text-xl font-bold text-gray-900">Business</h1>
+        <p className="text-sm text-gray-500 mt-0.5">Indicateurs clés — revenus, utilisateurs & conversions</p>
+      </div>
+
+      <BusinessKpiSection />
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <UserEvolutionChart />
+        <UserStatsCard />
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <ConversionFunnelChart />
+      </div>
     </div>
   );
 }
