@@ -9,13 +9,13 @@
 
 **StreamFlow** est une plateforme SaaS de streaming vidéo (films, séries, documentaires).
 
-| Info | Valeur |
-|------|--------|
-| Utilisateurs inscrits | 250 000 |
-| Utilisateurs actifs mensuels | 120 000 |
-| Abonnement | 9,99 €/mois |
-| Équipe | 15 devs · 2 DevOps · 1 PO · 1 CTO |
-| Stack | React · Node.js · PostgreSQL · AWS · Grafana |
+| Info                         | Valeur                                       |
+| ---------------------------- | -------------------------------------------- |
+| Utilisateurs inscrits        | 250 000                                      |
+| Utilisateurs actifs mensuels | 120 000                                      |
+| Abonnement                   | 9,99 €/mois                                  |
+| Équipe                       | 15 devs · 2 DevOps · 1 PO · 1 CTO            |
+| Stack                        | React · Node.js · PostgreSQL · AWS · Grafana |
 
 Depuis 2 mois, des problèmes critiques ont été remontés : lenteur des vidéos, erreurs de paiement, augmentation des désabonnements, bugs fréquents en production et retards de livraison.
 
@@ -24,6 +24,7 @@ Depuis 2 mois, des problèmes critiques ont été remontés : lenteur des vidéo
 ## 🎯 Objectif
 
 Ce dashboard permet de :
+
 - **Comprendre les problèmes** via les KPI calculés
 - **Suivre la performance** technique, projet, DevOps et business
 - **Prendre des décisions** éclairées en tant que CTO
@@ -34,41 +35,41 @@ Ce dashboard permet de :
 
 ### ⚙️ KPI Techniques
 
-| KPI | Valeur | Formule |
-|-----|--------|---------|
-| Error Rate | **4%** | 48 000 / 1 200 000 × 100 |
-| Temps moyen API | **562 ms** | Moyenne de l'échantillon |
+| KPI               | Valeur       | Formule                        |
+| ----------------- | ------------ | ------------------------------ |
+| Error Rate        | **4%**       | 48 000 / 1 200 000 × 100       |
+| Temps moyen API   | **562 ms**   | Moyenne de l'échantillon       |
 | P95 Temps réponse | **2 500 ms** | Percentile 95 de l'échantillon |
-| Uptime | **99,1%** | (720h - 6,5h) / 720h × 100 |
-| MTTR | **1,6 h** | (2 + 1 + 3 + 0,5) / 4 |
+| Uptime            | **99,1%**    | (720h - 6,5h) / 720h × 100     |
+| MTTR              | **1,6 h**    | (2 + 1 + 3 + 0,5) / 4          |
 
 ### 📋 KPI Projet
 
-| KPI | Valeur | Formule |
-|-----|--------|---------|
-| Vélocité S1 | **35 / 40 SP** (87,5%) | Réalisé / Prévu |
-| Vélocité S2 | **30 / 45 SP** (66,7%) | Réalisé / Prévu |
-| Vélocité S3 | **25 / 50 SP** (50%) | Réalisé / Prévu |
-| Évolution vélocité | **-42% sur 3 sprints** | Tendance baissière |
-| Bug Rate | **5,3 bugs/feature** | 320 bugs / 60 features |
-| Fix Rate | **56,3%** | 180 / 320 × 100 |
+| KPI                | Valeur                 | Formule                |
+| ------------------ | ---------------------- | ---------------------- |
+| Vélocité S1        | **35 / 40 SP** (87,5%) | Réalisé / Prévu        |
+| Vélocité S2        | **30 / 45 SP** (66,7%) | Réalisé / Prévu        |
+| Vélocité S3        | **25 / 50 SP** (50%)   | Réalisé / Prévu        |
+| Évolution vélocité | **-42% sur 3 sprints** | Tendance baissière     |
+| Bug Rate           | **5,3 bugs/feature**   | 320 bugs / 60 features |
+| Fix Rate           | **56,3%**              | 180 / 320 × 100        |
 
 ### 🚀 KPI DevOps (DORA Metrics)
 
-| KPI | Valeur | Formule |
-|-----|--------|---------|
-| Deployment Frequency | **1,3 / jour** | 40 déploiements / 30 jours |
-| Change Failure Rate | **30%** | 12 échecs / 40 déploiements × 100 |
-| Lead Time | **5 jours** | Donnée brute |
+| KPI                  | Valeur         | Formule                           |
+| -------------------- | -------------- | --------------------------------- |
+| Deployment Frequency | **1,3 / jour** | 40 déploiements / 30 jours        |
+| Change Failure Rate  | **30%**        | 12 échecs / 40 déploiements × 100 |
+| Lead Time            | **5 jours**    | Donnée brute                      |
 
 ### 💼 KPI Business
 
-| KPI | Valeur | Formule |
-|-----|--------|---------|
-| Churn Rate | **33,3%** | 40 000 perdus / 120 000 début × 100 |
-| Retention Rate | **66,7%** | 100% - Churn Rate |
-| ARPU | **10 €** | 1 000 000 € / 100 000 utilisateurs |
-| Conversion Rate | **4%** | 8 000 abonnements / 200 000 visiteurs × 100 |
+| KPI             | Valeur    | Formule                                     |
+| --------------- | --------- | ------------------------------------------- |
+| Churn Rate      | **33,3%** | 40 000 perdus / 120 000 début × 100         |
+| Retention Rate  | **66,7%** | 100% - Churn Rate                           |
+| ARPU            | **10 €**  | 1 000 000 € / 100 000 utilisateurs          |
+| Conversion Rate | **4%**    | 8 000 abonnements / 200 000 visiteurs × 100 |
 
 ---
 
@@ -83,13 +84,13 @@ Ce dashboard permet de :
 
 ### 2. KPI critiques
 
-| KPI | Valeur actuelle | Seuil d'alerte |
-|-----|----------------|----------------|
-| Churn Rate | 33,3% | > 5% |
-| Change Failure Rate | 30% | > 5% |
-| P95 Temps réponse | 2 500 ms | > 500 ms |
-| Fix Rate | 56,3% | < 80% |
-| Vélocité (tendance) | −42% | Toute baisse sur 2 sprints |
+| KPI                 | Valeur actuelle | Seuil d'alerte             |
+| ------------------- | --------------- | -------------------------- |
+| Churn Rate          | 33,3%           | > 5%                       |
+| Change Failure Rate | 30%             | > 5%                       |
+| P95 Temps réponse   | 2 500 ms        | > 500 ms                   |
+| Fix Rate            | 56,3%           | < 80%                      |
+| Vélocité (tendance) | −42%            | Toute baisse sur 2 sprints |
 
 ### 3. Liens technique ↔ business
 
@@ -103,13 +104,13 @@ Vélocité -42% → Moins de features → Moins de rétention
 
 ## 🎯 Plan d'action CTO — 5 Priorités
 
-| Priorité | Action | KPI ciblés |
-|----------|--------|------------|
-| 🔴 P1 | **Stabiliser la prod** — Feature flags, tests auto, rollback automatique | CFR, Error Rate |
-| 🔴 P2 | **Réduire le churn** — Corriger bugs paiement + chargement vidéo en urgence | Churn Rate, Fix Rate |
-| 🟡 P3 | **Améliorer les performances** — CDN vidéo, cache API, profiling Node.js | P95, Avg Response Time |
-| 🟡 P4 | **Restaurer la vélocité** — Limiter bugs ouverts à 50 max, tests unitaires | Vélocité, Bug Rate |
-| 🟢 P5 | **Réduire le Lead Time** — CI/CD complète, tests de non-régression, cible < 1 jour | Lead Time, Deploy Freq |
+| Priorité | Action                                                                             | KPI ciblés             |
+| -------- | ---------------------------------------------------------------------------------- | ---------------------- |
+| 🔴 P1    | **Stabiliser la prod** — Feature flags, tests auto, rollback automatique           | CFR, Error Rate        |
+| 🔴 P2    | **Réduire le churn** — Corriger bugs paiement + chargement vidéo en urgence        | Churn Rate, Fix Rate   |
+| 🟡 P3    | **Améliorer les performances** — CDN vidéo, cache API, profiling Node.js           | P95, Avg Response Time |
+| 🟡 P4    | **Restaurer la vélocité** — Limiter bugs ouverts à 50 max, tests unitaires         | Vélocité, Bug Rate     |
+| 🟢 P5    | **Réduire le Lead Time** — CI/CD complète, tests de non-régression, cible < 1 jour | Lead Time, Deploy Freq |
 
 ---
 
@@ -136,15 +137,15 @@ L'application sera disponible sur **http://localhost:5173**
 
 ## 🛠️ Stack Technique
 
-| Technologie | Usage |
-|-------------|-------|
-| **React 19** | Framework UI |
-| **TypeScript** | Typage statique |
-| **Vite** | Build tool & Dev server |
-| **Tailwind CSS v4** | Styles utilitaires |
-| **Recharts** | Graphiques (Bar, Line, Pie) |
-| **Lucide React** | Icônes |
-| **WireMock** | Mock backend (Docker) |
+| Technologie         | Usage                       |
+| ------------------- | --------------------------- |
+| **React 19**        | Framework UI                |
+| **TypeScript**      | Typage statique             |
+| **Vite**            | Build tool & Dev server     |
+| **Tailwind CSS v4** | Styles utilitaires          |
+| **Recharts**        | Graphiques (Bar, Line, Pie) |
+| **Lucide React**    | Icônes                      |
+| **WireMock**        | Mock backend (Docker)       |
 
 ---
 
@@ -168,37 +169,37 @@ Le serveur démarre sur **http://localhost:8080**.
 
 #### ⚙️ Technique
 
-| Méthode | Endpoint | Description |
-|---------|----------|-------------|
-| `GET` | `/api/technical/overview` | Error rate, uptime, MTTR, temps de réponse moyens |
-| `GET` | `/api/technical/response-times` | Échantillon des 13 mesures + stats (min, max, avg, P50, P90, P95) |
-| `GET` | `/api/technical/incidents` | Liste des 4 incidents du mois avec durée et sévérité |
+| Méthode | Endpoint                        | Description                                                       |
+| ------- | ------------------------------- | ----------------------------------------------------------------- |
+| `GET`   | `/api/technical/overview`       | Error rate, uptime, MTTR, temps de réponse moyens                 |
+| `GET`   | `/api/technical/response-times` | Échantillon des 13 mesures + stats (min, max, avg, P50, P90, P95) |
+| `GET`   | `/api/technical/incidents`      | Liste des 4 incidents du mois avec durée et sévérité              |
 
 #### 📋 Projet
 
-| Méthode | Endpoint | Description |
-|---------|----------|-------------|
-| `GET` | `/api/project/overview` | Bugs détectés / corrigés / ouverts, features livrées, bug rate, fix rate |
-| `GET` | `/api/project/sprints` | Vélocité des 3 derniers sprints (SP prévus vs réalisés) |
+| Méthode | Endpoint                | Description                                                              |
+| ------- | ----------------------- | ------------------------------------------------------------------------ |
+| `GET`   | `/api/project/overview` | Bugs détectés / corrigés / ouverts, features livrées, bug rate, fix rate |
+| `GET`   | `/api/project/sprints`  | Vélocité des 3 derniers sprints (SP prévus vs réalisés)                  |
 
 #### 🚀 DevOps
 
-| Méthode | Endpoint | Description |
-|---------|----------|-------------|
-| `GET` | `/api/devops/overview` | Déploiements (total, échecs, CFR), lead time, composition équipe |
+| Méthode | Endpoint               | Description                                                      |
+| ------- | ---------------------- | ---------------------------------------------------------------- |
+| `GET`   | `/api/devops/overview` | Déploiements (total, échecs, CFR), lead time, composition équipe |
 
 #### 💼 Business
 
-| Méthode | Endpoint | Description |
-|---------|----------|-------------|
-| `GET` | `/api/business/overview` | Revenus, ARPU, churn rate, retention rate, conversion |
-| `GET` | `/api/business/users` | Évolution utilisateurs actifs (début / fin de mois) |
+| Méthode | Endpoint                 | Description                                           |
+| ------- | ------------------------ | ----------------------------------------------------- |
+| `GET`   | `/api/business/overview` | Revenus, ARPU, churn rate, retention rate, conversion |
+| `GET`   | `/api/business/users`    | Évolution utilisateurs actifs (début / fin de mois)   |
 
 #### 📊 KPI Global
 
-| Méthode | Endpoint | Description |
-|---------|----------|-------------|
-| `GET` | `/api/kpis/summary` | Tous les KPI calculés avec statut (`ok` / `warning` / `critical`) et seuils d'alerte |
+| Méthode | Endpoint            | Description                                                                          |
+| ------- | ------------------- | ------------------------------------------------------------------------------------ |
+| `GET`   | `/api/kpis/summary` | Tous les KPI calculés avec statut (`ok` / `warning` / `critical`) et seuils d'alerte |
 
 ---
 
@@ -223,20 +224,18 @@ open http://localhost:8080/__admin/mappings
 {
   "globalStatus": "critical",
   "technical": {
-    "errorRate":       { "value": 4.0,  "unit": "%",  "status": "critical" },
+    "errorRate": { "value": 4.0, "unit": "%", "status": "critical" },
     "p95ResponseTime": { "value": 2500, "unit": "ms", "status": "critical" },
-    "uptime":          { "value": 99.1, "unit": "%",  "status": "warning"  }
+    "uptime": { "value": 99.1, "unit": "%", "status": "warning" }
   },
   "business": {
-    "churnRate":       { "value": 33.3, "unit": "%",  "status": "critical" },
-    "conversionRate":  { "value": 4.0,  "unit": "%",  "status": "warning"  }
+    "churnRate": { "value": 33.3, "unit": "%", "status": "critical" },
+    "conversionRate": { "value": 4.0, "unit": "%", "status": "warning" }
   }
 }
 ```
 
 ---
-
-
 
 ## 📋 Livrables du TP
 
@@ -246,10 +245,11 @@ open http://localhost:8080/__admin/mappings
 - [x] **Plan d'action** — 5 priorités CTO justifiées par les KPI
 
 ### Bonus
+
 - [x] Seuils d'alerte définis sur chaque KpiCard
 - [x] Statuts visuels automatiques (ok / warning / critical)
 - [x] Métriques DORA intégrées (CFR, Lead Time, Deploy Frequency)
 
 ---
 
-*Propriété de Julien Grade — TP Mission de Pilotage Projet*
+_Propriété de Julien Grade — TP Mission de Pilotage Projet_

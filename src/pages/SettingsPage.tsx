@@ -1,5 +1,5 @@
-import { Card } from '@/components/ui/Card';
-import { Settings } from 'lucide-react';
+import { Card } from "@/components/ui/Card";
+import { Settings } from "lucide-react";
 
 export default function SettingsPage() {
   return (

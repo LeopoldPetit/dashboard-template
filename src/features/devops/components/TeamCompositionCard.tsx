@@ -1,7 +1,7 @@
-import React from 'react';
-import { Users, Code2, Settings2, Briefcase } from 'lucide-react';
-import { Card } from '@/components/ui/Card';
-import { useDevOpsOverview } from '@/features/devops/hooks/useDevOpsOverview';
+import React from "react";
+import { Users, Code2, Settings2, Briefcase } from "lucide-react";
+import { Card } from "@/components/ui/Card";
+import { useDevOpsOverview } from "@/features/devops/hooks/useDevOpsOverview";
 
 interface TeamMemberRowProps {
   icon: React.ReactNode;
@@ -9,7 +9,11 @@ interface TeamMemberRowProps {
   count: number;
 }
 
-const TeamMemberRow: React.FC<TeamMemberRowProps> = ({ icon, label, count }) => (
+const TeamMemberRow: React.FC<TeamMemberRowProps> = ({
+  icon,
+  label,
+  count,
+}) => (
   <div className="flex items-center justify-between py-3 border-b border-gray-100 last:border-0">
     <div className="flex items-center gap-3 text-gray-600">
       {icon}
@@ -27,7 +31,11 @@ export const TeamCompositionCard: React.FC = () => {
   }
 
   if (error || !data) {
-    return <p className="text-sm text-red-500">Erreur lors du chargement de l'équipe.</p>;
+    return (
+      <p className="text-sm text-red-500">
+        Erreur lors du chargement de l'équipe.
+      </p>
+    );
   }
 
   const { team } = data;
@@ -43,9 +51,21 @@ export const TeamCompositionCard: React.FC = () => {
           {total} membres
         </span>
       </div>
-      <TeamMemberRow icon={<Code2 size={16} />} label="Développeurs" count={team.developers} />
-      <TeamMemberRow icon={<Settings2 size={16} />} label="DevOps" count={team.devops} />
-      <TeamMemberRow icon={<Briefcase size={16} />} label="Product Owner" count={team.productOwner} />
+      <TeamMemberRow
+        icon={<Code2 size={16} />}
+        label="Développeurs"
+        count={team.developers}
+      />
+      <TeamMemberRow
+        icon={<Settings2 size={16} />}
+        label="DevOps"
+        count={team.devops}
+      />
+      <TeamMemberRow
+        icon={<Briefcase size={16} />}
+        label="Product Owner"
+        count={team.productOwner}
+      />
       <TeamMemberRow icon={<Users size={16} />} label="CTO" count={team.cto} />
     </Card>
   );

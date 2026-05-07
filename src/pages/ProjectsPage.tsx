@@ -1,23 +1,40 @@
-import { Bug, CheckCircle, TrendingDown, TrendingUp, Minus, Layers } from 'lucide-react';
-import { clsx } from 'clsx';
+import {
+  Bug,
+  CheckCircle,
+  TrendingDown,
+  TrendingUp,
+  Minus,
+  Layers,
+} from "lucide-react";
+import { clsx } from "clsx";
 
-import { Card } from '@/components/ui/Card';
-import { KpiCard } from '@/components/ui/KpiCard';
-import { Badge } from '@/components/ui/Badge';
-import { SprintVelocityChart } from '@/features/project/components/SprintVelocityChart';
-import { useProjectOverview } from '@/features/project/hooks/useProjectOverview';
-import { useProjectSprints } from '@/features/project/hooks/useProjectSprints';
-import type { ISprintSummary } from '@/types';
+import { Card } from "@/components/ui/Card";
+import { KpiCard } from "@/components/ui/KpiCard";
+import { Badge } from "@/components/ui/Badge";
+import { SprintVelocityChart } from "@/features/project/components/SprintVelocityChart";
+import { useProjectOverview } from "@/features/project/hooks/useProjectOverview";
+import { useProjectSprints } from "@/features/project/hooks/useProjectSprints";
+import type { ISprintSummary } from "@/types";
 
-function TrendIcon({ trend }: { trend: ISprintSummary['trend'] }) {
-  if (trend === 'increasing') return <TrendingUp size={16} className="text-emerald-500" />;
-  if (trend === 'declining') return <TrendingDown size={16} className="text-red-500" />;
+function TrendIcon({ trend }: { trend: ISprintSummary["trend"] }) {
+  if (trend === "increasing")
+    return <TrendingUp size={16} className="text-emerald-500" />;
+  if (trend === "declining")
+    return <TrendingDown size={16} className="text-red-500" />;
   return <Minus size={16} className="text-gray-400" />;
 }
 
 export default function ProjectsPage() {
-  const { data: overview, loading: loadingOverview, error: errorOverview } = useProjectOverview();
-  const { data: sprints, loading: loadingSprints, error: errorSprints } = useProjectSprints();
+  const {
+    data: overview,
+    loading: loadingOverview,
+    error: errorOverview,
+  } = useProjectOverview();
+  const {
+    data: sprints,
+    loading: loadingSprints,
+    error: errorSprints,
+  } = useProjectSprints();
 
   const isLoading = loadingOverview || loadingSprints;
   const hasError = errorOverview ?? errorSprints;
@@ -39,14 +56,18 @@ export default function ProjectsPage() {
   }
 
   const fixRateStatus =
-    overview!.bugs.fixRate >= 75 ? 'ok' : overview!.bugs.fixRate >= 50 ? 'warning' : 'critical';
+    overview!.bugs.fixRate >= 75
+      ? "ok"
+      : overview!.bugs.fixRate >= 50
+        ? "warning"
+        : "critical";
 
   const velocityStatus =
     sprints!.summary.averageVelocityPercent >= 80
-      ? 'ok'
+      ? "ok"
       : sprints!.summary.averageVelocityPercent >= 60
-        ? 'warning'
-        : 'critical';
+        ? "warning"
+        : "critical";
 
   return (
     <div className="space-y-6">
@@ -97,7 +118,9 @@ export default function ProjectsPage() {
         </div>
 
         <Card className="flex flex-col gap-4">
-          <h3 className="text-sm font-semibold text-gray-700">Sprint Summary</h3>
+          <h3 className="text-sm font-semibold text-gray-700">
+            Sprint Summary
+          </h3>
           <div className="flex flex-col gap-3">
             <div className="flex items-center justify-between">
               <span className="text-xs text-gray-500">Total Planned</span>
@@ -132,41 +155,71 @@ export default function ProjectsPage() {
       <Card>
         <div className="flex items-center gap-2 mb-4">
           <Layers size={16} className="text-violet-500" />
-          <h3 className="text-sm font-semibold text-gray-700">Sprint Details</h3>
+          <h3 className="text-sm font-semibold text-gray-700">
+            Sprint Details
+          </h3>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-gray-100">
-                <th className="text-left py-2 px-3 text-xs font-medium text-gray-400 uppercase tracking-wide">Sprint</th>
-                <th className="text-right py-2 px-3 text-xs font-medium text-gray-400 uppercase tracking-wide">Planned</th>
-                <th className="text-right py-2 px-3 text-xs font-medium text-gray-400 uppercase tracking-wide">Done</th>
-                <th className="text-right py-2 px-3 text-xs font-medium text-gray-400 uppercase tracking-wide">Velocity</th>
-                <th className="text-center py-2 px-3 text-xs font-medium text-gray-400 uppercase tracking-wide">Status</th>
+                <th className="text-left py-2 px-3 text-xs font-medium text-gray-400 uppercase tracking-wide">
+                  Sprint
+                </th>
+                <th className="text-right py-2 px-3 text-xs font-medium text-gray-400 uppercase tracking-wide">
+                  Planned
+                </th>
+                <th className="text-right py-2 px-3 text-xs font-medium text-gray-400 uppercase tracking-wide">
+                  Done
+                </th>
+                <th className="text-right py-2 px-3 text-xs font-medium text-gray-400 uppercase tracking-wide">
+                  Velocity
+                </th>
+                <th className="text-center py-2 px-3 text-xs font-medium text-gray-400 uppercase tracking-wide">
+                  Status
+                </th>
               </tr>
             </thead>
             <tbody>
               {sprints!.sprints.map((sprint) => {
                 const vStatus =
                   sprint.velocityPercent >= 80
-                    ? 'ok'
+                    ? "ok"
                     : sprint.velocityPercent >= 60
-                      ? 'warning'
-                      : 'critical';
+                      ? "warning"
+                      : "critical";
                 return (
-                  <tr key={sprint.id} className="border-b border-gray-50 hover:bg-gray-50 transition-colors">
-                    <td className="py-3 px-3 font-medium text-gray-800">{sprint.name}</td>
-                    <td className="py-3 px-3 text-right text-gray-600">{sprint.storyPointsPlanned} pts</td>
-                    <td className="py-3 px-3 text-right text-gray-600">{sprint.storyPointsDone} pts</td>
+                  <tr
+                    key={sprint.id}
+                    className="border-b border-gray-50 hover:bg-gray-50 transition-colors"
+                  >
+                    <td className="py-3 px-3 font-medium text-gray-800">
+                      {sprint.name}
+                    </td>
+                    <td className="py-3 px-3 text-right text-gray-600">
+                      {sprint.storyPointsPlanned} pts
+                    </td>
+                    <td className="py-3 px-3 text-right text-gray-600">
+                      {sprint.storyPointsDone} pts
+                    </td>
                     <td className="py-3 px-3 text-right">
-                      <span className={clsx('font-semibold',
-                        vStatus === 'ok' ? 'text-emerald-600' : vStatus === 'warning' ? 'text-amber-600' : 'text-red-600'
-                      )}>
+                      <span
+                        className={clsx(
+                          "font-semibold",
+                          vStatus === "ok"
+                            ? "text-emerald-600"
+                            : vStatus === "warning"
+                              ? "text-amber-600"
+                              : "text-red-600",
+                        )}
+                      >
                         {sprint.velocityPercent}%
                       </span>
                     </td>
                     <td className="py-3 px-3 text-center">
-                      <Badge variant={sprint.status === 'completed' ? 'ok' : 'info'}>
+                      <Badge
+                        variant={sprint.status === "completed" ? "ok" : "info"}
+                      >
                         {sprint.status}
                       </Badge>
                     </td>
@@ -186,7 +239,9 @@ export default function ProjectsPage() {
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div className="flex flex-col items-center gap-1 p-4 rounded-lg bg-red-50 border border-red-100">
-            <span className="text-2xl font-bold text-red-600">{overview!.bugs.detected}</span>
+            <span className="text-2xl font-bold text-red-600">
+              {overview!.bugs.detected}
+            </span>
             <span className="text-xs text-red-400 font-medium">Detected</span>
           </div>
           <div className="flex flex-col items-center gap-1 p-4 rounded-lg bg-emerald-50 border border-emerald-100">
@@ -197,8 +252,12 @@ export default function ProjectsPage() {
             <span className="text-xs text-emerald-400 font-medium">Fixed</span>
           </div>
           <div className="flex flex-col items-center gap-1 p-4 rounded-lg bg-amber-50 border border-amber-100">
-            <span className="text-2xl font-bold text-amber-600">{overview!.bugs.open}</span>
-            <span className="text-xs text-amber-400 font-medium">Still Open</span>
+            <span className="text-2xl font-bold text-amber-600">
+              {overview!.bugs.open}
+            </span>
+            <span className="text-xs text-amber-400 font-medium">
+              Still Open
+            </span>
           </div>
         </div>
       </Card>

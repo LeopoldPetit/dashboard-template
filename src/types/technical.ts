@@ -23,8 +23,8 @@ export interface ITechnicalIncident {
   title: string;
   durationHours: number;
   durationMinutes: number;
-  severity: 'low' | 'medium' | 'high' | 'critical';
-  status: 'resolved' | 'open' | 'in_progress';
+  severity: "low" | "medium" | "high" | "critical";
+  status: "resolved" | "open" | "in_progress";
 }
 
 export interface ITechnicalIncidentsResponse {

@@ -1,30 +1,30 @@
-import React from 'react';
-import { KpiCard } from '@/components/ui/KpiCard';
-import { useDevOpsOverview } from '@/features/devops/hooks/useDevOpsOverview';
-import type { KpiStatus } from '@/types';
+import React from "react";
+import { KpiCard } from "@/components/ui/KpiCard";
+import { useDevOpsOverview } from "@/features/devops/hooks/useDevOpsOverview";
+import type { KpiStatus } from "@/types";
 
 function failureRateStatus(rate: number): KpiStatus {
-  if (rate < 15) return 'ok';
-  if (rate < 25) return 'warning';
-  return 'critical';
+  if (rate < 15) return "ok";
+  if (rate < 25) return "warning";
+  return "critical";
 }
 
 function leadTimeStatus(days: number): KpiStatus {
-  if (days <= 3) return 'ok';
-  if (days <= 7) return 'warning';
-  return 'critical';
+  if (days <= 3) return "ok";
+  if (days <= 7) return "warning";
+  return "critical";
 }
 
 function frequencyStatus(freq: number): KpiStatus {
-  if (freq >= 1) return 'ok';
-  if (freq >= 0.5) return 'warning';
-  return 'critical';
+  if (freq >= 1) return "ok";
+  if (freq >= 0.5) return "warning";
+  return "critical";
 }
 
 function successRateStatus(rate: number): KpiStatus {
-  if (rate >= 90) return 'ok';
-  if (rate >= 75) return 'warning';
-  return 'critical';
+  if (rate >= 90) return "ok";
+  if (rate >= 75) return "warning";
+  return "critical";
 }
 
 export const DeploymentStatsSection: React.FC = () => {
@@ -42,7 +42,9 @@ export const DeploymentStatsSection: React.FC = () => {
 
   if (error || !data) {
     return (
-      <p className="text-sm text-red-500">Erreur lors du chargement des métriques DevOps.</p>
+      <p className="text-sm text-red-500">
+        Erreur lors du chargement des métriques DevOps.
+      </p>
     );
   }
 

@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
-import { fetchDevOpsOverview } from '@/services/api/devops';
-import type { IDevOpsOverview } from '@/types';
+import { useState, useEffect } from "react";
+import { fetchDevOpsOverview } from "@/services/api/devops";
+import type { IDevOpsOverview } from "@/types";
 
 /**
  * Fetches DevOps overview: deployments stats, lead time, team composition.
@@ -13,7 +13,9 @@ export function useDevOpsOverview() {
   useEffect(() => {
     fetchDevOpsOverview()
       .then(setData)
-      .catch((err: unknown) => setError(err instanceof Error ? err : new Error(String(err))))
+      .catch((err: unknown) =>
+        setError(err instanceof Error ? err : new Error(String(err))),
+      )
       .finally(() => setLoading(false));
   }, []);
 

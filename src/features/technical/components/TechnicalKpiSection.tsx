@@ -1,30 +1,30 @@
-import React from 'react';
-import { KpiCard } from '@/components/ui/KpiCard';
-import { useTechnicalOverview } from '@/features/technical/hooks/useTechnicalOverview';
-import type { KpiStatus } from '@/types';
+import React from "react";
+import { KpiCard } from "@/components/ui/KpiCard";
+import { useTechnicalOverview } from "@/features/technical/hooks/useTechnicalOverview";
+import type { KpiStatus } from "@/types";
 
 function uptimeStatus(percent: number): KpiStatus {
-  if (percent >= 99.5) return 'ok';
-  if (percent >= 98) return 'warning';
-  return 'critical';
+  if (percent >= 99.5) return "ok";
+  if (percent >= 98) return "warning";
+  return "critical";
 }
 
 function errorRateStatus(rate: number): KpiStatus {
-  if (rate < 1) return 'ok';
-  if (rate < 5) return 'warning';
-  return 'critical';
+  if (rate < 1) return "ok";
+  if (rate < 5) return "warning";
+  return "critical";
 }
 
 function mttrStatus(hours: number): KpiStatus {
-  if (hours < 1) return 'ok';
-  if (hours < 3) return 'warning';
-  return 'critical';
+  if (hours < 1) return "ok";
+  if (hours < 3) return "warning";
+  return "critical";
 }
 
 function responseStatus(avg: number): KpiStatus {
-  if (avg < 300) return 'ok';
-  if (avg < 800) return 'warning';
-  return 'critical';
+  if (avg < 300) return "ok";
+  if (avg < 800) return "warning";
+  return "critical";
 }
 
 export const TechnicalKpiSection: React.FC = () => {
@@ -42,7 +42,9 @@ export const TechnicalKpiSection: React.FC = () => {
 
   if (error || !data) {
     return (
-      <p className="text-sm text-red-500">Erreur lors du chargement des KPIs techniques.</p>
+      <p className="text-sm text-red-500">
+        Erreur lors du chargement des KPIs techniques.
+      </p>
     );
   }
 
@@ -60,7 +62,9 @@ export const TechnicalKpiSection: React.FC = () => {
         value={data.errorRate}
         unit="%"
         status={errorRateStatus(data.errorRate)}
-        description={`${data.errorRequests.toLocaleString()} erreurs / ${(data.totalRequests / 1000).toFixed(0)}k req`}
+        description={`${data.errorRequests.toLocaleString()} erreurs / ${(
+          data.totalRequests / 1000
+        ).toFixed(0)}k req`}
       />
       <KpiCard
         title="MTTR moyen"

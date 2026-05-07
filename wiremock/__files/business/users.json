@@ -9,6 +9,6 @@
   },
   "evolution": [
     { "label": "Début du mois", "value": 120000 },
-    { "label": "Fin du mois",   "value": 100000 }
+    { "label": "Fin du mois", "value": 100000 }
   ]
 }

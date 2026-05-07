@@ -1,7 +1,7 @@
-import React from 'react';
-import { Users, UserCheck, UserPlus, UserMinus } from 'lucide-react';
-import { Card } from '@/components/ui/Card';
-import { useBusinessUsers } from '@/features/business/hooks/useBusinessUsers';
+import React from "react";
+import { Users, UserCheck, UserPlus, UserMinus } from "lucide-react";
+import { Card } from "@/components/ui/Card";
+import { useBusinessUsers } from "@/features/business/hooks/useBusinessUsers";
 
 interface StatRowProps {
   icon: React.ReactNode;
@@ -28,14 +28,20 @@ export const UserStatsCard: React.FC = () => {
   }
 
   if (error || !data) {
-    return <p className="text-sm text-red-500">Erreur lors du chargement des stats utilisateurs.</p>;
+    return (
+      <p className="text-sm text-red-500">
+        Erreur lors du chargement des stats utilisateurs.
+      </p>
+    );
   }
 
   const { users } = data;
 
   return (
     <Card>
-      <h3 className="text-sm font-semibold text-gray-700 mb-2">Utilisateurs — ce mois</h3>
+      <h3 className="text-sm font-semibold text-gray-700 mb-2">
+        Utilisateurs — ce mois
+      </h3>
       <StatRow
         icon={<Users size={16} className="text-violet-600" />}
         label="Total inscrits"

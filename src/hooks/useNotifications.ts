@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
-import { fetchNotifications } from '@/services/api/notifications';
-import type { INotificationsResponse } from '@/types';
+import { useState, useEffect } from "react";
+import { fetchNotifications } from "@/services/api/notifications";
+import type { INotificationsResponse } from "@/types";
 
 /**
  * Fetches the notifications list and unread count.
@@ -14,7 +14,9 @@ export function useNotifications() {
   useEffect(() => {
     fetchNotifications()
       .then(setData)
-      .catch((err: unknown) => setError(err instanceof Error ? err : new Error(String(err))))
+      .catch((err: unknown) =>
+        setError(err instanceof Error ? err : new Error(String(err))),
+      )
       .finally(() => setLoading(false));
   }, []);
 

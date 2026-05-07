@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
-import { fetchProjectOverview } from '@/services/api/project';
-import type { IProjectOverview } from '@/types';
+import { useState, useEffect } from "react";
+import { fetchProjectOverview } from "@/services/api/project";
+import type { IProjectOverview } from "@/types";
 
 /**
  * Fetches the project overview KPIs (bugs, features, fix rate).
@@ -13,7 +13,9 @@ export function useProjectOverview() {
   useEffect(() => {
     fetchProjectOverview()
       .then(setData)
-      .catch((err: unknown) => setError(err instanceof Error ? err : new Error(String(err))))
+      .catch((err: unknown) =>
+        setError(err instanceof Error ? err : new Error(String(err))),
+      )
       .finally(() => setLoading(false));
   }, []);
 

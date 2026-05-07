@@ -1,4 +1,4 @@
-export type KpiStatus = 'ok' | 'warning' | 'critical';
+export type KpiStatus = "ok" | "warning" | "critical";
 
 export interface IKpiCard {
   title: string;
@@ -23,7 +23,7 @@ export interface IWeeklyDeployPoint {
 export interface IActivityItem {
   label: string;
   time: string;
-  severity: 'ok' | 'warning' | 'critical' | 'info';
+  severity: "ok" | "warning" | "critical" | "info";
 }
 
 export interface IDashboardOverview {

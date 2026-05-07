@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   BarChart,
   Bar,
@@ -8,15 +8,17 @@ import {
   Tooltip,
   Legend,
   ResponsiveContainer,
-} from 'recharts';
-import { Card } from '@/components/ui/Card';
-import type { ISprint } from '@/types';
+} from "recharts";
+import { Card } from "@/components/ui/Card";
+import type { ISprint } from "@/types";
 
 interface SprintVelocityChartProps {
   sprints: ISprint[];
 }
 
-export const SprintVelocityChart: React.FC<SprintVelocityChartProps> = ({ sprints }) => {
+export const SprintVelocityChart: React.FC<SprintVelocityChartProps> = ({
+  sprints,
+}) => {
   const chartData = sprints.map((s) => ({
     name: s.shortName,
     Planned: s.storyPointsPlanned,
@@ -25,7 +27,9 @@ export const SprintVelocityChart: React.FC<SprintVelocityChartProps> = ({ sprint
 
   return (
     <Card>
-      <h3 className="text-sm font-semibold text-gray-700 mb-4">Sprint Velocity — Story Points</h3>
+      <h3 className="text-sm font-semibold text-gray-700 mb-4">
+        Sprint Velocity — Story Points
+      </h3>
       <ResponsiveContainer width="100%" height={220}>
         <BarChart data={chartData} barCategoryGap="30%">
           <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />

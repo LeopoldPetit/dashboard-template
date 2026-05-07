@@ -1,11 +1,11 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { RootLayout } from '@/layouts/RootLayout';
-import DashboardPage from '@/pages/DashboardPage';
-import TechnicalPage from '@/pages/TechnicalPage';
-import ProjectsPage from '@/pages/ProjectsPage';
-import DevOpsPage from '@/pages/DevOpsPage';
-import BusinessPage from '@/pages/BusinessPage';
-import SettingsPage from '@/pages/SettingsPage';
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { RootLayout } from "@/layouts/RootLayout";
+import DashboardPage from "@/pages/DashboardPage";
+import TechnicalPage from "@/pages/TechnicalPage";
+import ProjectsPage from "@/pages/ProjectsPage";
+import DevOpsPage from "@/pages/DevOpsPage";
+import BusinessPage from "@/pages/BusinessPage";
+import SettingsPage from "@/pages/SettingsPage";
 
 export default function App() {
   return (

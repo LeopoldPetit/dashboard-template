@@ -1,16 +1,16 @@
-import React from 'react';
-import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
-import { clsx } from 'clsx';
-import { Card } from '@/components/ui/Card';
-import { Badge } from '@/components/ui/Badge';
-import type { IKpiCard, KpiStatus } from '@/types';
+import React from "react";
+import { TrendingUp, TrendingDown, Minus } from "lucide-react";
+import { clsx } from "clsx";
+import { Card } from "@/components/ui/Card";
+import { Badge } from "@/components/ui/Badge";
+import type { IKpiCard, KpiStatus } from "@/types";
 
 type KpiCardProps = IKpiCard;
 
 const statusLabel: Record<KpiStatus, string> = {
-  ok: 'OK',
-  warning: 'Warning',
-  critical: 'Critical',
+  ok: "OK",
+  warning: "Warning",
+  critical: "Critical",
 };
 
 export const KpiCard: React.FC<KpiCardProps> = ({
@@ -32,10 +32,10 @@ export const KpiCard: React.FC<KpiCardProps> = ({
 
   const trendColor =
     trend === undefined
-      ? 'text-gray-400'
+      ? "text-gray-400"
       : trend > 0
-        ? 'text-emerald-600'
-        : 'text-red-500';
+        ? "text-emerald-600"
+        : "text-red-500";
 
   return (
     <Card className="hover:shadow-md transition-shadow duration-200">
@@ -50,7 +50,12 @@ export const KpiCard: React.FC<KpiCardProps> = ({
       {(trend !== undefined || description) && (
         <div className="mt-3 flex items-center gap-1">
           {trend !== undefined && (
-            <span className={clsx('flex items-center gap-0.5 text-xs font-medium', trendColor)}>
+            <span
+              className={clsx(
+                "flex items-center gap-0.5 text-xs font-medium",
+                trendColor,
+              )}
+            >
               {trendIcon}
               {Math.abs(trend)}%
             </span>

@@ -59,17 +59,17 @@ java -jar wiremock.jar --port 8080
 
 ## 📡 Endpoints disponibles
 
-| Méthode | URL | Description |
-|---------|-----|-------------|
-| `GET` | `/api/technical/overview` | Métriques techniques (error rate, uptime, MTTR) |
-| `GET` | `/api/technical/response-times` | Échantillon + stats temps de réponse |
-| `GET` | `/api/technical/incidents` | Liste des incidents du mois |
-| `GET` | `/api/project/overview` | Bugs détectés/corrigés, features |
-| `GET` | `/api/project/sprints` | Vélocité des 3 sprints |
-| `GET` | `/api/devops/overview` | Déploiements, CFR, lead time |
-| `GET` | `/api/business/overview` | Revenus, churn, conversion |
-| `GET` | `/api/business/users` | Évolution utilisateurs actifs |
-| `GET` | `/api/kpis/summary` | Résumé complet de tous les KPI avec statuts |
+| Méthode | URL                             | Description                                     |
+| ------- | ------------------------------- | ----------------------------------------------- |
+| `GET`   | `/api/technical/overview`       | Métriques techniques (error rate, uptime, MTTR) |
+| `GET`   | `/api/technical/response-times` | Échantillon + stats temps de réponse            |
+| `GET`   | `/api/technical/incidents`      | Liste des incidents du mois                     |
+| `GET`   | `/api/project/overview`         | Bugs détectés/corrigés, features                |
+| `GET`   | `/api/project/sprints`          | Vélocité des 3 sprints                          |
+| `GET`   | `/api/devops/overview`          | Déploiements, CFR, lead time                    |
+| `GET`   | `/api/business/overview`        | Revenus, churn, conversion                      |
+| `GET`   | `/api/business/users`           | Évolution utilisateurs actifs                   |
+| `GET`   | `/api/kpis/summary`             | Résumé complet de tous les KPI avec statuts     |
 
 ---
 

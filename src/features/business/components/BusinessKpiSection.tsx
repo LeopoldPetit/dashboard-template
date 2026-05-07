@@ -1,18 +1,18 @@
-import React from 'react';
-import { KpiCard } from '@/components/ui/KpiCard';
-import { useBusinessOverview } from '@/features/business/hooks/useBusinessOverview';
-import type { KpiStatus } from '@/types';
+import React from "react";
+import { KpiCard } from "@/components/ui/KpiCard";
+import { useBusinessOverview } from "@/features/business/hooks/useBusinessOverview";
+import type { KpiStatus } from "@/types";
 
 function conversionStatus(rate: number): KpiStatus {
-  if (rate >= 5) return 'ok';
-  if (rate >= 3) return 'warning';
-  return 'critical';
+  if (rate >= 5) return "ok";
+  if (rate >= 3) return "warning";
+  return "critical";
 }
 
 function churnStatus(rate: number): KpiStatus {
-  if (rate < 5) return 'ok';
-  if (rate < 15) return 'warning';
-  return 'critical';
+  if (rate < 5) return "ok";
+  if (rate < 15) return "warning";
+  return "critical";
 }
 
 export const BusinessKpiSection: React.FC = () => {
@@ -29,7 +29,11 @@ export const BusinessKpiSection: React.FC = () => {
   }
 
   if (error || !data) {
-    return <p className="text-sm text-red-500">Erreur lors du chargement des KPIs business.</p>;
+    return (
+      <p className="text-sm text-red-500">
+        Erreur lors du chargement des KPIs business.
+      </p>
+    );
   }
 
   return (

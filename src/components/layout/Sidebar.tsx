@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import React, { useState } from "react";
+import { NavLink } from "react-router-dom";
 import {
   LayoutDashboard,
   Activity,
@@ -10,8 +10,8 @@ import {
   ChevronLeft,
   ChevronRight,
   Zap,
-} from 'lucide-react';
-import { clsx } from 'clsx';
+} from "lucide-react";
+import { clsx } from "clsx";
 
 interface NavItem {
   label: string;
@@ -20,15 +20,15 @@ interface NavItem {
 }
 
 const navItems: NavItem[] = [
-  { label: 'Dashboard', path: '/', icon: <LayoutDashboard size={20} /> },
-  { label: 'Technical', path: '/technical', icon: <Activity size={20} /> },
-  { label: 'Projects', path: '/projects', icon: <FolderKanban size={20} /> },
-  { label: 'DevOps', path: '/devops', icon: <GitBranch size={20} /> },
-  { label: 'Business', path: '/business', icon: <BarChart3 size={20} /> },
+  { label: "Dashboard", path: "/", icon: <LayoutDashboard size={20} /> },
+  { label: "Technical", path: "/technical", icon: <Activity size={20} /> },
+  { label: "Projects", path: "/projects", icon: <FolderKanban size={20} /> },
+  { label: "DevOps", path: "/devops", icon: <GitBranch size={20} /> },
+  { label: "Business", path: "/business", icon: <BarChart3 size={20} /> },
 ];
 
 const bottomItems: NavItem[] = [
-  { label: 'Settings', path: '/settings', icon: <Settings size={20} /> },
+  { label: "Settings", path: "/settings", icon: <Settings size={20} /> },
 ];
 
 export const Sidebar: React.FC = () => {
@@ -37,8 +37,8 @@ export const Sidebar: React.FC = () => {
   return (
     <aside
       className={clsx(
-        'flex flex-col h-screen bg-gray-900 text-white transition-all duration-300 ease-in-out shrink-0',
-        collapsed ? 'w-16' : 'w-60'
+        "flex flex-col h-screen bg-gray-900 text-white transition-all duration-300 ease-in-out shrink-0",
+        collapsed ? "w-16" : "w-60",
       )}
     >
       {/* Logo */}
@@ -47,7 +47,9 @@ export const Sidebar: React.FC = () => {
           <Zap size={16} className="text-white" />
         </div>
         {!collapsed && (
-          <span className="font-semibold text-sm tracking-wide truncate">StreamFlow</span>
+          <span className="font-semibold text-sm tracking-wide truncate">
+            StreamFlow
+          </span>
         )}
       </div>
 
@@ -57,13 +59,13 @@ export const Sidebar: React.FC = () => {
           <NavLink
             key={item.path}
             to={item.path}
-            end={item.path === '/'}
+            end={item.path === "/"}
             className={({ isActive }) =>
               clsx(
-                'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors duration-150 group',
+                "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors duration-150 group",
                 isActive
-                  ? 'bg-violet-600 text-white'
-                  : 'text-gray-400 hover:bg-gray-800 hover:text-white'
+                  ? "bg-violet-600 text-white"
+                  : "text-gray-400 hover:bg-gray-800 hover:text-white",
               )
             }
           >
@@ -81,10 +83,10 @@ export const Sidebar: React.FC = () => {
             to={item.path}
             className={({ isActive }) =>
               clsx(
-                'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors duration-150',
+                "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors duration-150",
                 isActive
-                  ? 'bg-violet-600 text-white'
-                  : 'text-gray-400 hover:bg-gray-800 hover:text-white'
+                  ? "bg-violet-600 text-white"
+                  : "text-gray-400 hover:bg-gray-800 hover:text-white",
               )
             }
           >

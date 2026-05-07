@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
-import { fetchResponseTimes } from '@/services/api/technical';
-import type { IResponseTimesResponse } from '@/types';
+import { useState, useEffect } from "react";
+import { fetchResponseTimes } from "@/services/api/technical";
+import type { IResponseTimesResponse } from "@/types";
 
 /**
  * Fetches response time samples and statistics.
@@ -13,7 +13,9 @@ export function useResponseTimes() {
   useEffect(() => {
     fetchResponseTimes()
       .then(setData)
-      .catch((err: unknown) => setError(err instanceof Error ? err : new Error(String(err))))
+      .catch((err: unknown) =>
+        setError(err instanceof Error ? err : new Error(String(err))),
+      )
       .finally(() => setLoading(false));
   }, []);
 
