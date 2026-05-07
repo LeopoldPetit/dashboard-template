@@ -1,14 +1,25 @@
-import { Card } from '@/components/ui/Card';
 import { GitBranch } from 'lucide-react';
+import { DeploymentStatsSection } from '@/features/devops/components/DeploymentStatsSection';
+import { TeamCompositionCard } from '@/features/devops/components/TeamCompositionCard';
 
 export default function DevOpsPage() {
   return (
     <div className="space-y-6">
-      <Card className="flex flex-col items-center justify-center py-20 text-center">
-        <GitBranch size={40} className="text-violet-400 mb-4" />
-        <h2 className="text-lg font-semibold text-gray-700">DevOps</h2>
-        <p className="text-sm text-gray-400 mt-1">Coming soon — connect your WireMock backend.</p>
-      </Card>
+      <div className="flex items-center gap-3">
+        <GitBranch size={24} className="text-violet-500" />
+        <h1 className="text-xl font-bold text-gray-800">Vue DevOps</h1>
+      </div>
+
+      <section className="space-y-2">
+        <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide">
+          Métriques de déploiement
+        </h2>
+        <DeploymentStatsSection />
+      </section>
+
+      <section className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <TeamCompositionCard />
+      </section>
     </div>
   );
 }
