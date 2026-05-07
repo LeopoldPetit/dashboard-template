@@ -49,7 +49,10 @@ export const UserEvolutionChart: React.FC = () => {
             tick={{ fontSize: 12 }}
           />
           <Tooltip
-            formatter={(v: number) => [v.toLocaleString(), "Utilisateurs"]}
+            formatter={(v) => [
+              typeof v === "number" ? v.toLocaleString() : v,
+              "Utilisateurs",
+            ]}
           />
           <Area
             type="monotone"

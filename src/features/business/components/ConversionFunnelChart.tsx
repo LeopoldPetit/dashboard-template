@@ -54,7 +54,10 @@ export const ConversionFunnelChart: React.FC = () => {
             tick={{ fontSize: 12 }}
           />
           <Tooltip
-            formatter={(v: number) => [v.toLocaleString(), "Utilisateurs"]}
+            formatter={(v) => [
+              typeof v === "number" ? v.toLocaleString() : v,
+              "Utilisateurs",
+            ]}
           />
           <Bar dataKey="value" radius={[6, 6, 0, 0]}>
             {funnelData.map((_, index) => (
