@@ -1,7 +1,6 @@
 # 📊 Dashboard de Pilotage — StreamFlow
 
-> **TP — Mission de Pilotage Projet**  
-> Tableau de bord opérationnel pour la plateforme SaaS de streaming vidéo **StreamFlow**
+> Tableau de bord opérationnel interactif pour la plateforme SaaS de streaming vidéo **StreamFlow**
 
 ---
 
@@ -28,6 +27,7 @@ Ce dashboard permet de :
 - **Comprendre les problèmes** via les KPI calculés
 - **Suivre la performance** technique, projet, DevOps et business
 - **Prendre des décisions** éclairées en tant que CTO
+- **Saisir et mettre à jour les données** directement depuis l'interface
 
 ---
 
@@ -73,6 +73,43 @@ Ce dashboard permet de :
 
 ---
 
+## ✏️ Fonctionnalités interactives
+
+Le dashboard permet de saisir et persister des données directement depuis l'interface, avec un POST automatique vers le backend.
+
+### 🗂 Dashboard — Recent Activity
+
+- Bouton **+ Ajouter** en haut à droite du fil d'activité
+- Champs : label, temps, sévérité (`info` / `ok` / `warning` / `critical`)
+- `POST /api/dashboard/activity`
+
+### 🔴 Technical — Incidents
+
+- Bouton **+ Ajouter** en haut à droite du tableau des incidents
+- Champs : titre, durée (heures + minutes), sévérité, statut
+- `POST /api/technical/incidents`
+
+### 📋 Projects — Sprint Details
+
+- Bouton **+ Nouveau sprint** en haut à droite du tableau des sprints
+- Champs : nom, abréviation, points planifiés, points réalisés, statut
+- La vélocité (%) est calculée automatiquement
+- `POST /api/project/sprints`
+
+### ⚙️ DevOps — Composition de l'équipe
+
+- Boutons **+** et **−** sur chaque ligne (Développeurs, DevOps, Product Owner, CTO)
+- Mise à jour immédiate avec refetch
+- `POST /api/devops/overview`
+
+### 💼 Business — Statistiques utilisateurs
+
+- **Double-clic** sur une valeur (total inscrits, actifs mensuels, nouveaux, churned)
+- La valeur devient un champ éditable — **Entrée** pour valider, **Échap** pour annuler
+- `POST /api/business/users`
+
+---
+
 ## 🔍 Analyse
 
 ### 1. Problèmes majeurs
@@ -94,7 +131,7 @@ Ce dashboard permet de :
 
 ### 3. Liens technique ↔ business
 
-```
+```text
 Bugs prod (CFR 30%) → Erreurs paiement → Churn +33%
 P95 2500ms → "Vidéos ne se lancent pas" → Résiliations
 Vélocité -42% → Moins de features → Moins de rétention
@@ -116,6 +153,14 @@ Vélocité -42% → Moins de features → Moins de rétention
 
 ## 🚀 Installation & Lancement
 
+### Prérequis
+
+- **Node.js 20+**
+- **Docker Desktop** (pour le backend et la base de données)
+- **Python 3.x** (pour pre-commit)
+
+### Frontend
+
 ```bash
 # Cloner le projet
 git clone https://github.com/LeopoldPetit/dashboard-template.git
@@ -131,125 +176,201 @@ npm run dev
 npm run build
 ```
 
-L'application sera disponible sur **http://localhost:5173**
+L'application sera disponible sur <http://localhost:5173>
 
----
+### Backend (API Node.js + PostgreSQL)
 
-## 🛠️ Stack Technique
+```bash
+# Démarrer PostgreSQL via Docker Compose
+docker compose up -d
 
-| Technologie         | Usage                       |
-| ------------------- | --------------------------- |
-| **React 19**        | Framework UI                |
-| **TypeScript**      | Typage statique             |
-| **Vite**            | Build tool & Dev server     |
-| **Tailwind CSS v4** | Styles utilitaires          |
-| **Recharts**        | Graphiques (Bar, Line, Pie) |
-| **Lucide React**    | Icônes                      |
-| **WireMock**        | Mock backend (Docker)       |
+# Installer les dépendances du backend
+cd backend && npm install
 
----
+# Lancer le serveur de développement
+npm run dev
+```
 
-## 🧪 Mock API — WireMock
+L'API sera disponible sur <http://localhost:3001\>
 
-Le projet embarque un serveur de mock HTTP basé sur **WireMock** pour simuler le backend sans dépendance externe.
+### Variables d'environnement
 
-### Démarrage
+Créer un fichier `.env.local` à la racine :
+
+```env
+VITE_API_URL=http://localhost:3001
+```
+
+### Alternative — WireMock (mock sans base de données)
 
 ```bash
 ./wiremock/wiremock.sh
 ```
 
-> Prérequis : **Docker Desktop** doit être lancé.
-
-Le serveur démarre sur **http://localhost:8080**.
+Le serveur mock démarre sur <http://localhost:8080>. Utiliser `VITE_API_URL=http://localhost:8080`.
 
 ---
 
-### 📡 Endpoints disponibles
+## 🧪 Tests
 
-#### ⚙️ Technique
-
-| Méthode | Endpoint                        | Description                                                       |
-| ------- | ------------------------------- | ----------------------------------------------------------------- |
-| `GET`   | `/api/technical/overview`       | Error rate, uptime, MTTR, temps de réponse moyens                 |
-| `GET`   | `/api/technical/response-times` | Échantillon des 13 mesures + stats (min, max, avg, P50, P90, P95) |
-| `GET`   | `/api/technical/incidents`      | Liste des 4 incidents du mois avec durée et sévérité              |
-
-#### 📋 Projet
-
-| Méthode | Endpoint                | Description                                                              |
-| ------- | ----------------------- | ------------------------------------------------------------------------ |
-| `GET`   | `/api/project/overview` | Bugs détectés / corrigés / ouverts, features livrées, bug rate, fix rate |
-| `GET`   | `/api/project/sprints`  | Vélocité des 3 derniers sprints (SP prévus vs réalisés)                  |
-
-#### 🚀 DevOps
-
-| Méthode | Endpoint               | Description                                                      |
-| ------- | ---------------------- | ---------------------------------------------------------------- |
-| `GET`   | `/api/devops/overview` | Déploiements (total, échecs, CFR), lead time, composition équipe |
-
-#### 💼 Business
-
-| Méthode | Endpoint                 | Description                                           |
-| ------- | ------------------------ | ----------------------------------------------------- |
-| `GET`   | `/api/business/overview` | Revenus, ARPU, churn rate, retention rate, conversion |
-| `GET`   | `/api/business/users`    | Évolution utilisateurs actifs (début / fin de mois)   |
-
-#### 📊 KPI Global
-
-| Méthode | Endpoint            | Description                                                                          |
-| ------- | ------------------- | ------------------------------------------------------------------------------------ |
-| `GET`   | `/api/kpis/summary` | Tous les KPI calculés avec statut (`ok` / `warning` / `critical`) et seuils d'alerte |
-
----
-
-### 🔧 Commandes utiles
+### Tests unitaires du backend
 
 ```bash
-# Voir les logs en direct
-docker logs -f streamflow-wiremock
+cd backend
+npm test                 # Lancer tous les tests
+npm run test:coverage    # Avec rapport de couverture
+```
 
-# Arrêter le serveur
-docker stop streamflow-wiremock
+Les tests couvrent :
 
-# Consulter les mappings actifs (UI admin WireMock)
-open http://localhost:8080/__admin/mappings
+- Tous les endpoints GET et POST (technical, project, devops, business, dashboard, notifications, kpis)
+- La fonction utilitaire `requireFields`
+- Le pool PostgreSQL est mocké — aucune base de données requise pour les tests
+
+> Résultat actuel : 44 tests, 8 suites — 0 échec
+
+### Pre-commit hooks
+
+```bash
+# Installer le virtualenv Python et les hooks
+python3 -m venv .venv
+source .venv/bin/activate   # Windows : .venv\Scripts\activate
+pip install -r requirements.txt
+pre-commit install
+
+# Lancer manuellement sur tous les fichiers
+pre-commit run --all-files
+```
+
+Hooks configurés : trailing whitespace · end-of-file · YAML check · ESLint · Prettier · TypeScript type check
+
+---
+
+## 🛠️ Stack Technique
+
+| Technologie          | Usage                            |
+| -------------------- | -------------------------------- |
+| **React 19**         | Framework UI                     |
+| **TypeScript ~6**    | Typage statique strict           |
+| **Vite 8**           | Build tool & Dev server          |
+| **Tailwind CSS v4**  | Styles utilitaires               |
+| **Recharts 3**       | Graphiques (Area, Bar, Funnel)   |
+| **Lucide React**     | Icônes                           |
+| **React Router DOM** | Navigation SPA                   |
+| **Express**          | Backend API REST                 |
+| **PostgreSQL 16**    | Base de données                  |
+| **Flyway**           | Migrations de base de données    |
+| **Jest + Supertest** | Tests unitaires backend          |
+| **WireMock**         | Mock backend alternatif (Docker) |
+
+---
+
+## 📁 Structure du projet
+
+```text
+dashboard-template/
+├── src/                          # Frontend React
+│   ├── components/
+│   │   ├── ui/                   # Modal, Card, Badge, KpiCard
+│   │   └── layout/               # Sidebar, TopBar
+│   ├── features/
+│   │   ├── dashboard/            # Activité récente + AddActivityForm
+│   │   ├── technical/            # Incidents + AddIncidentForm
+│   │   ├── project/              # Sprints + AddSprintForm
+│   │   ├── devops/               # Équipe avec boutons +/− interactifs
+│   │   └── business/             # Stats utilisateurs éditables (double-clic)
+│   ├── pages/                    # DashboardPage, TechnicalPage, ProjectsPage…
+│   ├── services/api/             # Fonctions fetch GET + POST par domaine
+│   ├── hooks/                    # Hooks globaux (useNotifications)
+│   └── types/                    # Interfaces TypeScript globales
+├── backend/
+│   ├── src/
+│   │   ├── routes/               # Express routers (technical, project, devops…)
+│   │   ├── __tests__/            # Tests Jest + Supertest (44 tests)
+│   │   └── __mocks__/            # Mock du pool PostgreSQL
+│   └── package.json
+├── db/
+│   └── migrations/               # V1__create_schema.sql · V2__seed_data.sql
+├── wiremock/                      # Mock HTTP alternatif
+├── .pre-commit-config.yaml        # Hooks de qualité de code
+├── requirements.txt               # Dépendances Python (pre-commit)
+└── docker-compose.yml             # PostgreSQL + Flyway
 ```
 
 ---
 
-### Exemple de réponse — `/api/kpis/summary`
+## 📡 API REST — Endpoints
 
-```json
-{
-  "globalStatus": "critical",
-  "technical": {
-    "errorRate": { "value": 4.0, "unit": "%", "status": "critical" },
-    "p95ResponseTime": { "value": 2500, "unit": "ms", "status": "critical" },
-    "uptime": { "value": 99.1, "unit": "%", "status": "warning" }
-  },
-  "business": {
-    "churnRate": { "value": 33.3, "unit": "%", "status": "critical" },
-    "conversionRate": { "value": 4.0, "unit": "%", "status": "warning" }
-  }
-}
-```
+### ⚙️ Technique
+
+| Méthode | Endpoint                        | Description                                   |
+| ------- | ------------------------------- | --------------------------------------------- |
+| `GET`   | `/api/technical/overview`       | Error rate, uptime, MTTR, temps de réponse    |
+| `GET`   | `/api/technical/response-times` | Échantillon + stats (min, max, p50, p90, p95) |
+| `GET`   | `/api/technical/incidents`      | Liste des incidents + résumé                  |
+| `POST`  | `/api/technical/overview`       | Créer un snapshot technique                   |
+| `POST`  | `/api/technical/incidents`      | **Ajouter un incident** _(formulaire UI)_     |
+| `POST`  | `/api/technical/response-times` | Insérer des mesures de temps de réponse       |
+
+### 📋 Projet
+
+| Méthode | Endpoint                | Description                             |
+| ------- | ----------------------- | --------------------------------------- |
+| `GET`   | `/api/project/overview` | Bugs, features, fix rate, bug rate      |
+| `GET`   | `/api/project/sprints`  | Vélocité des sprints                    |
+| `POST`  | `/api/project/overview` | Créer un snapshot projet                |
+| `POST`  | `/api/project/sprints`  | **Ajouter un sprint** _(formulaire UI)_ |
+
+### 🚀 DevOps
+
+| Méthode | Endpoint               | Description                                                |
+| ------- | ---------------------- | ---------------------------------------------------------- |
+| `GET`   | `/api/devops/overview` | Déploiements, lead time, composition équipe                |
+| `POST`  | `/api/devops/overview` | **Mettre à jour la composition équipe** _(boutons +/− UI)_ |
+
+### 💼 Business
+
+| Méthode | Endpoint                 | Description                                         |
+| ------- | ------------------------ | --------------------------------------------------- |
+| `GET`   | `/api/business/overview` | Revenus, ARPU, churn, retention, conversion         |
+| `GET`   | `/api/business/users`    | Statistiques utilisateurs + évolution               |
+| `POST`  | `/api/business/overview` | Créer un snapshot business                          |
+| `POST`  | `/api/business/users`    | **Modifier les stats utilisateurs** _(double-clic)_ |
+
+### 🗂 Dashboard
+
+| Méthode | Endpoint                        | Description                                           |
+| ------- | ------------------------------- | ----------------------------------------------------- |
+| `GET`   | `/api/dashboard/overview`       | KPIs, volume requêtes, déploiements, activité récente |
+| `POST`  | `/api/dashboard/activity`       | **Ajouter une activité** _(formulaire UI)_            |
+| `POST`  | `/api/dashboard/kpis`           | Créer un KPI dashboard                                |
+| `POST`  | `/api/dashboard/request-volume` | Insérer un point de volume                            |
+| `POST`  | `/api/dashboard/weekly-deploys` | Insérer un déploiement hebdomadaire                   |
+
+### 🔔 Notifications
+
+| Méthode | Endpoint             | Description              |
+| ------- | -------------------- | ------------------------ |
+| `GET`   | `/api/notifications` | Liste + compteur non lus |
+| `POST`  | `/api/notifications` | Créer une notification   |
+
+### 📊 KPI Global
+
+| Méthode | Endpoint            | Description                                              |
+| ------- | ------------------- | -------------------------------------------------------- |
+| `GET`   | `/api/kpis/summary` | Tous les KPI avec statut (`ok` / `warning` / `critical`) |
+| `POST`  | `/api/kpis/summary` | Créer un résumé KPI complet avec métriques               |
 
 ---
 
-## 📋 Livrables du TP
+## ✅ Livrables
 
-- [x] **Tableau de KPI calculés** — voir section ci-dessus et `src/data/kpi.ts`
-- [x] **Analyse écrite** — voir section Analyse
-- [x] **Dashboard** — application React interactive
-- [x] **Plan d'action** — 5 priorités CTO justifiées par les KPI
-
-### Bonus
-
-- [x] Seuils d'alerte définis sur chaque KpiCard
-- [x] Statuts visuels automatiques (ok / warning / critical)
-- [x] Métriques DORA intégrées (CFR, Lead Time, Deploy Frequency)
-
----
-
-_Propriété de Julien Grade — TP Mission de Pilotage Projet_
+- [x] **KPI calculés** avec seuils d'alerte et statuts visuels
+- [x] **Dashboard interactif** — 5 pages (Dashboard, Technical, Projects, DevOps, Business)
+- [x] **Saisie de données** — formulaires modaux, édition inline double-clic, boutons +/−
+- [x] **Backend REST** — Express + PostgreSQL, 14 routes GET + POST
+- [x] **Tests unitaires** — 44 tests Jest/Supertest, pool DB mocké, 0 dépendance externe
+- [x] **Pre-commit hooks** — ESLint, Prettier, TypeScript, whitespace
+- [x] **Migrations Flyway** — schéma complet + données de seed
+- [x] **WireMock** — mock HTTP alternatif pour développement sans base de données
+- [x] **Analyse** et **plan d'action CTO** en 5 priorités justifiées par les KPI

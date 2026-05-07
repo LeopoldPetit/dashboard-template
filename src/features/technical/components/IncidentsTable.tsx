@@ -3,6 +3,7 @@ import { clsx } from "clsx";
 import { AlertTriangle, AlertCircle, Info, CheckCircle } from "lucide-react";
 import { Card } from "@/components/ui/Card";
 import { useTechnicalIncidents } from "@/features/technical/hooks/useTechnicalIncidents";
+import { AddIncidentForm } from "@/features/technical/components/AddIncidentForm";
 import type { ITechnicalIncident } from "@/types";
 
 const severityConfig: Record<
@@ -32,13 +33,16 @@ const severityConfig: Record<
 };
 
 export const IncidentsTable: React.FC = () => {
-  const { data, loading, error } = useTechnicalIncidents();
+  const { data, loading, error, refetch } = useTechnicalIncidents();
 
   return (
     <Card>
-      <h3 className="text-sm font-semibold text-gray-700 mb-4">
-        Incidents (30 derniers jours)
-      </h3>
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="text-sm font-semibold text-gray-700">
+          Incidents (30 derniers jours)
+        </h3>
+        <AddIncidentForm onSuccess={refetch} />
+      </div>
       {loading && (
         <div className="space-y-3">
           {Array.from({ length: 4 }).map((_, i) => (

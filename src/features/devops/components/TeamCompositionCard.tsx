@@ -1,30 +1,58 @@
-import React from "react";
-import { Users, Code2, Settings2, Briefcase } from "lucide-react";
+import React, { useState } from "react";
+import { Users, Code2, Settings2, Briefcase, Plus, Minus } from "lucide-react";
 import { Card } from "@/components/ui/Card";
 import { useDevOpsOverview } from "@/features/devops/hooks/useDevOpsOverview";
+import { postDevOpsOverview } from "@/services/api/devops";
+
+type TeamKey = "developers" | "devops" | "productOwner" | "cto";
 
 interface TeamMemberRowProps {
   icon: React.ReactNode;
   label: string;
   count: number;
+  onIncrement: () => void;
+  onDecrement: () => void;
+  saving: boolean;
 }
 
 const TeamMemberRow: React.FC<TeamMemberRowProps> = ({
   icon,
   label,
   count,
+  onIncrement,
+  onDecrement,
+  saving,
 }) => (
   <div className="flex items-center justify-between py-3 border-b border-gray-100 last:border-0">
     <div className="flex items-center gap-3 text-gray-600">
       {icon}
       <span className="text-sm font-medium">{label}</span>
     </div>
-    <span className="text-sm font-semibold text-gray-800">{count}</span>
+    <div className="flex items-center gap-2">
+      <button
+        onClick={onDecrement}
+        disabled={saving || count <= 0}
+        className="w-6 h-6 flex items-center justify-center rounded-md bg-gray-100 text-gray-500 hover:bg-red-100 hover:text-red-600 disabled:opacity-30 transition-colors"
+      >
+        <Minus size={12} />
+      </button>
+      <span className="text-sm font-semibold text-gray-800 w-6 text-center">
+        {count}
+      </span>
+      <button
+        onClick={onIncrement}
+        disabled={saving}
+        className="w-6 h-6 flex items-center justify-center rounded-md bg-gray-100 text-gray-500 hover:bg-emerald-100 hover:text-emerald-600 disabled:opacity-30 transition-colors"
+      >
+        <Plus size={12} />
+      </button>
+    </div>
   </div>
 );
 
 export const TeamCompositionCard: React.FC = () => {
-  const { data, loading, error } = useDevOpsOverview();
+  const { data, loading, error, refetch } = useDevOpsOverview();
+  const [saving, setSaving] = useState(false);
 
   if (loading) {
     return <div className="h-48 rounded-xl bg-gray-100 animate-pulse" />;
@@ -38,8 +66,42 @@ export const TeamCompositionCard: React.FC = () => {
     );
   }
 
-  const { team } = data;
+  const { team, deployments, leadTime } = data;
   const total = team.developers + team.devops + team.productOwner + team.cto;
+
+  const updateTeam = async (key: TeamKey, delta: number) => {
+    const newTeam = { ...team, [key]: Math.max(0, team[key] + delta) };
+    setSaving(true);
+    try {
+      await postDevOpsOverview({
+        deployTotal: deployments.total,
+        deploySuccessful: deployments.successful,
+        deployFailed: deployments.failed,
+        changeFailureRate: deployments.changeFailureRate,
+        frequencyPerDay: deployments.frequencyPerDay,
+        periodDays: deployments.periodDays,
+        leadTimeAvgDays: leadTime.averageDays,
+        teamDevelopers: newTeam.developers,
+        teamDevops: newTeam.devops,
+        teamProductOwner: newTeam.productOwner,
+        teamCto: newTeam.cto,
+      });
+      refetch();
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const rows: { key: TeamKey; icon: React.ReactNode; label: string }[] = [
+    { key: "developers", icon: <Code2 size={16} />, label: "Développeurs" },
+    { key: "devops", icon: <Settings2 size={16} />, label: "DevOps" },
+    {
+      key: "productOwner",
+      icon: <Briefcase size={16} />,
+      label: "Product Owner",
+    },
+    { key: "cto", icon: <Users size={16} />, label: "CTO" },
+  ];
 
   return (
     <Card className="p-5">
@@ -48,25 +110,20 @@ export const TeamCompositionCard: React.FC = () => {
           Composition de l'équipe
         </h3>
         <span className="text-xs bg-violet-100 text-violet-700 font-semibold px-2 py-1 rounded-full">
-          {total} membres
+          {saving ? "…" : `${total} membres`}
         </span>
       </div>
-      <TeamMemberRow
-        icon={<Code2 size={16} />}
-        label="Développeurs"
-        count={team.developers}
-      />
-      <TeamMemberRow
-        icon={<Settings2 size={16} />}
-        label="DevOps"
-        count={team.devops}
-      />
-      <TeamMemberRow
-        icon={<Briefcase size={16} />}
-        label="Product Owner"
-        count={team.productOwner}
-      />
-      <TeamMemberRow icon={<Users size={16} />} label="CTO" count={team.cto} />
+      {rows.map(({ key, icon, label }) => (
+        <TeamMemberRow
+          key={key}
+          icon={icon}
+          label={label}
+          count={team[key]}
+          saving={saving}
+          onIncrement={() => updateTeam(key, +1)}
+          onDecrement={() => updateTeam(key, -1)}
+        />
+      ))}
     </Card>
   );
 };

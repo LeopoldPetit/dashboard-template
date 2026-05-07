@@ -12,6 +12,7 @@ import { Card } from "@/components/ui/Card";
 import { KpiCard } from "@/components/ui/KpiCard";
 import { Badge } from "@/components/ui/Badge";
 import { SprintVelocityChart } from "@/features/project/components/SprintVelocityChart";
+import { AddSprintForm } from "@/features/project/components/AddSprintForm";
 import { useProjectOverview } from "@/features/project/hooks/useProjectOverview";
 import { useProjectSprints } from "@/features/project/hooks/useProjectSprints";
 import type { ISprintSummary } from "@/types";
@@ -34,6 +35,7 @@ export default function ProjectsPage() {
     data: sprints,
     loading: loadingSprints,
     error: errorSprints,
+    refetch: refetchSprints,
   } = useProjectSprints();
 
   const isLoading = loadingOverview || loadingSprints;
@@ -153,11 +155,14 @@ export default function ProjectsPage() {
 
       {/* Sprint Detail Table */}
       <Card>
-        <div className="flex items-center gap-2 mb-4">
-          <Layers size={16} className="text-violet-500" />
-          <h3 className="text-sm font-semibold text-gray-700">
-            Sprint Details
-          </h3>
+        <div className="flex items-center justify-between gap-2 mb-4">
+          <div className="flex items-center gap-2">
+            <Layers size={16} className="text-violet-500" />
+            <h3 className="text-sm font-semibold text-gray-700">
+              Sprint Details
+            </h3>
+          </div>
+          <AddSprintForm onSuccess={refetchSprints} />
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">

@@ -1,13 +1,14 @@
 # WireMock — StreamFlow Mock API
 
-Serveur de mock HTTP pour simuler le backend de l'application StreamFlow.  
-Toutes les données proviennent du TP de pilotage projet.
+Serveur de mock HTTP **GET uniquement** pour simuler le backend de lecture de l'application StreamFlow sans base de données.
+
+> ⚠️ **Limitation** : WireMock ne supporte que les requêtes GET. Les fonctionnalités d'écriture de l'interface (ajout d'incidents, de sprints, d'activités, mise à jour de l'équipe et des stats utilisateurs) nécessitent le **backend réel** (`backend/` + PostgreSQL via `docker compose up -d`).
 
 ---
 
 ## 📁 Structure
 
-```
+```text
 wiremock/
 ├── mappings/
 │   └── all-mappings.json      # Déclaration de toutes les routes
@@ -81,4 +82,29 @@ curl http://localhost:8080/api/kpis/summary | jq .
 
 # Récupérer les données des sprints
 curl http://localhost:8080/api/project/sprints | jq .
+```
+
+## ⚙️ Configuration frontend
+
+Pour pointer le frontend vers WireMock, créer `.env.local` à la racine :
+
+```env
+VITE_API_URL=http://localhost:8080
+```
+
+## 🔄 Vs Backend réel
+
+| Capacité                                | WireMock | Backend réel |
+| --------------------------------------- | :------: | :----------: |
+| Lecture des données (GET)               |    ✅    |      ✅      |
+| Ajout d'incidents / sprints / activités |    ❌    |      ✅      |
+| Modification de l'équipe (DevOps)       |    ❌    |      ✅      |
+| Édition inline des stats Business       |    ❌    |      ✅      |
+| Persistance des données                 |    ❌    |      ✅      |
+
+Pour activer toutes les fonctionnalités interactives, utiliser le backend réel :
+
+```bash
+docker compose up -d        # PostgreSQL + Flyway
+cd backend && npm run dev   # API sur http://localhost:3001
 ```

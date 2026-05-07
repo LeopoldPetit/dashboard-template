@@ -1,6 +1,7 @@
 import { KpiCard } from "@/components/ui/KpiCard";
 import { Card } from "@/components/ui/Card";
 import { useDashboardOverview } from "@/features/dashboard/hooks/useDashboardOverview";
+import { AddActivityForm } from "@/features/dashboard/components/AddActivityForm";
 import {
   AreaChart,
   Area,
@@ -21,7 +22,7 @@ const severityColor: Record<string, string> = {
 };
 
 export default function DashboardPage() {
-  const { data, loading, error } = useDashboardOverview();
+  const { data, loading, error, refetch } = useDashboardOverview();
 
   if (loading) {
     return (
@@ -122,9 +123,12 @@ export default function DashboardPage() {
 
       {/* Recent activity */}
       <Card>
-        <h2 className="text-sm font-semibold text-gray-800 mb-4">
-          Recent Activity
-        </h2>
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-sm font-semibold text-gray-800">
+            Recent Activity
+          </h2>
+          <AddActivityForm onSuccess={refetch} />
+        </div>
         <ul className="divide-y divide-gray-50">
           {data.recentActivity.map((item, i) => (
             <li key={i} className="flex items-start gap-3 py-3">
